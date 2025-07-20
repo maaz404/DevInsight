@@ -9,6 +9,50 @@
 
 DevInsight is a comprehensive full-stack application that analyzes GitHub repositories using AI to provide detailed insights about code quality, documentation, and best practices. Get instant feedback on your projects with beautiful, actionable reports.
 
+## 📸 Screenshots
+
+### 🏠 Landing Page
+
+<!-- Add your landing page screenshot here -->
+
+![DevInsight Landing Page](./screenshots/landing-page.png)
+
+_Clean, modern landing page with clear value proposition and call-to-action_
+
+<br/>
+
+### 🔍 Repository Analysis
+
+<!-- Add your analysis page screenshot here -->
+
+![Repository Analysis Interface](./screenshots/analysis-page.png)
+
+_Intuitive interface for entering GitHub repository URLs and starting analysis_
+
+<br/>
+
+### 📊 AI-Powered Dashboard
+
+<!-- Add your dashboard screenshot here -->
+
+![AI Analysis Dashboard](./screenshots/dashboard.png)
+
+_Comprehensive dashboard showing code quality metrics, insights, and recommendations_
+
+<br/>
+
+### 📈 Detailed Reports
+
+<!-- Add your reports screenshot here -->
+
+![Detailed Analysis Reports](./screenshots/reports.png)
+
+_Beautiful visual reports with actionable insights and performance metrics_
+
+<br/>
+
+---
+
 ## 🛠️ Tech Stack
 
 ![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat&logo=react)
@@ -21,11 +65,13 @@ DevInsight is a comprehensive full-stack application that analyzes GitHub reposi
 ## ⚡ Quick Start
 
 ### Prerequisites
+
 - Node.js 18+
 - npm or yarn
 - Git
 
 ### Installation
+
 ```bash
 # Clone the repository
 git clone https://github.com/maaz404/Devinsight.git
@@ -39,6 +85,7 @@ npm run dev:both
 ```
 
 ### Development
+
 ```bash
 # Frontend only (React + Vite)
 npm run dev:client
@@ -66,6 +113,7 @@ graph LR
 ```
 
 ### ✨ Features
+
 - **🚀 Automatic Deployment**: Push changes → Live in 2-3 minutes
 - **🎯 Smart Triggers**: Only deploys when `client/` files change
 - **🔒 Secure**: Uses GitHub's built-in GITHUB_TOKEN
@@ -97,7 +145,7 @@ name: 🚀 Deploy Frontend to GitHub Pages
 on:
   push:
     branches: [main]
-    paths: ['client/**']
+    paths: ["client/**"]
 
 jobs:
   build-and-deploy:
@@ -147,6 +195,7 @@ DevInsight/
 │   ├── controllers/
 │   ├── package.json
 │   └── index.js
+├── screenshots/            # 📸 Project screenshots
 ├── package.json           # 📦 Workspace configuration
 └── README.md
 ```
@@ -154,6 +203,7 @@ DevInsight/
 ## ✨ Features
 
 ### 🔍 Core Functionality
+
 - **📊 Repository Analysis** - Deep analysis of GitHub repositories
 - **🤖 AI-Powered Insights** - GPT-4 powered code quality assessment
 - **📈 Visual Reports** - Beautiful dashboards with score meters and metrics
@@ -161,6 +211,7 @@ DevInsight/
 - **⚡ Real-time Processing** - Fast analysis with progress indicators
 
 ### 🛡️ Security & Performance
+
 - **🔐 Secure API Integration** - Protected GitHub token handling
 - **⚡ Optimized Builds** - Vite for lightning-fast development
 - **📱 Responsive Design** - Works on all devices
@@ -173,8 +224,35 @@ DevInsight/
 ## 📊 Deployment Status
 
 You can monitor deployment status at:
+
 - **Actions Tab**: [https://github.com/maaz404/Devinsight/actions](https://github.com/maaz404/Devinsight/actions)
 - **Deployments**: [https://github.com/maaz404/Devinsight/deployments](https://github.com/maaz404/Devinsight/deployments)
+
+## 🎯 Demo & Usage
+
+### 📱 Mobile Responsive
+
+<!-- Add mobile screenshots here -->
+<div align="center">
+  <img src="./screenshots/mobile-landing.png" width="300" alt="Mobile Landing Page"/>
+  <img src="./screenshots/mobile-dashboard.png" width="300" alt="Mobile Dashboard"/>
+</div>
+
+_Fully responsive design works seamlessly on all devices_
+
+<br/>
+
+### 🎨 User Experience
+
+<!-- Add UX flow screenshots here -->
+
+![User Experience Flow](./screenshots/user-flow.gif)
+
+_Smooth, intuitive user experience from analysis to insights_
+
+<br/>
+
+---
 
 ## 🤝 Contributing
 
@@ -193,7 +271,7 @@ You can monitor deployment status at:
 ```bash
 # Development
 npm run dev:client          # Start React dev server
-npm run dev:server          # Start Node.js dev server  
+npm run dev:server          # Start Node.js dev server
 npm run dev:both           # Start both servers
 
 # Production
