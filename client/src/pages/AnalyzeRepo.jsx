@@ -60,11 +60,12 @@ const AnalyzeRepo = () => {
     { title: 'Generating Report', description: 'Compiling AI-powered insights...' }
   ];
 
-  // Conditional styling helper function
+  // Enhanced conditional styling helper function using softer design tokens
   const getContainerStyle = (additionalStyles = {}) => ({
-    border: isDarkMode ? 'none' : '1px solid #e0e0e0',
-    boxShadow: isDarkMode ? 'none' : '0 1px 4px rgba(0,0,0,0.1)',
+    border: isDarkMode ? 'none' : 'none', // Remove borders for softer appearance
+    boxShadow: isDarkMode ? 'none' : '0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 4px 0 rgba(0, 0, 0, 0.04)', // Soft shadows
     transition: 'all 0.3s ease',
+    background: isDarkMode ? '#1F1F1F' : '#fcfcfc', // Near-white for containers
     ...additionalStyles
   });
 
@@ -138,7 +139,7 @@ const AnalyzeRepo = () => {
   return (
     <div style={{ 
       padding: '24px', 
-      background: isDarkMode ? '#000000' : '#f8f9fa', 
+      background: isDarkMode ? '#141414' : '#f5f7fa', // Soft off-white background
       minHeight: '100vh',
       transition: 'background-color 0.3s ease'
     }}>
@@ -148,15 +149,24 @@ const AnalyzeRepo = () => {
         marginBottom: 32,
         ...getContainerStyle({
           padding: '32px',
-          borderRadius: '8px',
-          background: isDarkMode ? 'transparent' : '#ffffff'
+          borderRadius: '8px'
         })
       }}>
-        <Title level={2} style={{ color: isDarkMode ? '#fff' : '#000' }}>
-          <GithubOutlined style={{ marginRight: 8, color: '#1890ff' }} />
+        <Title level={2} style={{ 
+          color: isDarkMode ? '#FFFFFFD9' : '#1f1f1f', // Deep charcoal for softer appearance
+          transition: 'color 0.3s ease'
+        }}>
+          <GithubOutlined style={{ 
+            marginRight: 8, 
+            color: isDarkMode ? '#4096FF' : '#1677FF' 
+          }} />
           Analyze GitHub Repository
         </Title>
-        <Paragraph type="secondary" style={{ fontSize: '16px' }}>
+        <Paragraph style={{ 
+          fontSize: '16px',
+          color: isDarkMode ? '#FFFFFFA6' : '#000000A6',
+          margin: 0
+        }}>
           Get AI-powered insights into code quality, structure, and best practices
         </Paragraph>
       </div>
@@ -218,8 +228,8 @@ const AnalyzeRepo = () => {
           </Form.Item>
         </Form>
         
-        <div style={{ textAlign: 'center', color: '#8c8c8c' }}>
-          <Text type="secondary">
+        <div style={{ textAlign: 'center', color: isDarkMode ? '#FFFFFF73' : '#00000073' }}>
+          <Text style={{ color: isDarkMode ? '#FFFFFF73' : '#00000073' }}>
             📊 Get comprehensive code quality insights, documentation analysis, and improvement suggestions
           </Text>
         </div>

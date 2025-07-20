@@ -15,18 +15,19 @@ const { Title, Paragraph } = Typography;
 const Home = () => {
   const { isDarkMode } = useTheme();
   
-  // Conditional styling helper function
+  // Enhanced conditional styling helper function using softer design tokens
   const getContainerStyle = (additionalStyles = {}) => ({
-    border: isDarkMode ? 'none' : '1px solid #e0e0e0',
-    boxShadow: isDarkMode ? 'none' : '0 1px 4px rgba(0,0,0,0.1)',
+    border: isDarkMode ? 'none' : 'none', // Remove borders for softer appearance
+    boxShadow: isDarkMode ? 'none' : '0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 4px 0 rgba(0, 0, 0, 0.04)', // Soft shadows
     transition: 'all 0.3s ease',
+    background: isDarkMode ? '#1F1F1F' : '#fcfcfc', // Near-white for containers
     ...additionalStyles
   });
   
   return (
     <div style={{ 
       padding: '0 24px', 
-      background: isDarkMode ? '#000000' : '#f8f9fa', 
+      background: isDarkMode ? '#141414' : '#f5f7fa', // Soft off-white background
       minHeight: '100vh',
       transition: 'background-color 0.3s ease'
     }}>
@@ -38,7 +39,6 @@ const Home = () => {
           margin: '0 auto 40px',
           maxWidth: '1200px',
           borderRadius: '8px',
-          background: isDarkMode ? 'transparent' : '#ffffff',
           marginTop: '24px'
         })
       }}>
@@ -47,20 +47,28 @@ const Home = () => {
           style={{ 
             fontSize: '48px', 
             marginBottom: 16,
-            color: isDarkMode ? '#fff' : '#000',
+            color: isDarkMode ? '#FFFFFFD9' : '#1f1f1f',
             transition: 'color 0.3s ease'
           }}
         >
-          <GithubOutlined style={{ marginRight: 16, color: '#1890ff' }} />
+          <GithubOutlined style={{ marginRight: 16, color: isDarkMode ? '#4096FF' : '#1677FF' }} />
           DevInsight
         </Title>
-        <Title level={2} type="secondary" style={{ fontWeight: 400, marginBottom: 24 }}>
+        <Title level={2} style={{ 
+          fontWeight: 400, 
+          marginBottom: 24,
+          color: isDarkMode ? '#FFFFFFA6' : '#4b4b4b'
+        }}>
           AI-Powered GitHub Repository Analyzer
         </Title>
         <Divider style={{ width: 100, margin: '0 auto 40px' }} />
         
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
-          <Paragraph style={{ fontSize: '18px', marginBottom: 32 }}>
+          <Paragraph style={{ 
+            fontSize: '18px', 
+            marginBottom: 32,
+            color: isDarkMode ? '#FFFFFFA6' : '#4b4b4b'
+          }}>
             Unlock comprehensive insights from your GitHub repositories with advanced AI algorithms. 
             Perfect for developers, teams, and project managers seeking to improve code quality and productivity.
           </Paragraph>
@@ -93,7 +101,7 @@ const Home = () => {
             <div style={{ 
               width: 64, 
               height: 64, 
-              background: isDarkMode ? 'rgba(24, 144, 255, 0.1)' : '#e6f7ff', 
+              background: isDarkMode ? 'rgba(64, 150, 255, 0.1)' : '#E6F4FF', 
               borderRadius: '50%', 
               display: 'flex', 
               alignItems: 'center', 
@@ -101,10 +109,12 @@ const Home = () => {
               margin: '0 auto 16px',
               transition: 'background-color 0.3s ease'
             }}>
-              <CodeOutlined style={{ fontSize: 32, color: '#1890ff' }} />
+              <CodeOutlined style={{ fontSize: 32, color: isDarkMode ? '#4096FF' : '#1677FF' }} />
             </div>
             <Title level={4} style={{ marginBottom: 16 }}>Code Quality Analysis</Title>
-            <Paragraph type="secondary">
+            <Paragraph style={{ 
+              color: isDarkMode ? '#FFFFFFA6' : '#000000A6'
+            }}>
               Comprehensive analysis of code quality metrics, best practices, and potential improvements 
               using cutting-edge AI technology.
             </Paragraph>
@@ -135,7 +145,9 @@ const Home = () => {
               <ThunderboltOutlined style={{ fontSize: 32, color: '#fa8c16' }} />
             </div>
             <Title level={4} style={{ marginBottom: 16 }}>Performance Insights</Title>
-            <Paragraph type="secondary">
+            <Paragraph style={{ 
+              color: isDarkMode ? '#FFFFFFA6' : '#000000A6'
+            }}>
               Identify performance bottlenecks and get AI-powered suggestions for optimization 
               to enhance your application's efficiency.
             </Paragraph>
@@ -166,7 +178,9 @@ const Home = () => {
               <TeamOutlined style={{ fontSize: 32, color: '#52c41a' }} />
             </div>
             <Title level={4} style={{ marginBottom: 16 }}>Team Collaboration</Title>
-            <Paragraph type="secondary">
+            <Paragraph style={{ 
+              color: isDarkMode ? '#FFFFFFA6' : '#000000A6'
+            }}>
               Analyze collaboration patterns, contribution metrics, and team productivity insights 
               to improve development workflows.
             </Paragraph>
@@ -181,7 +195,11 @@ const Home = () => {
         ...getContainerStyle()
       }}>
         <Title level={3} style={{ marginBottom: 16 }}>Ready to Analyze Your Repository?</Title>
-        <Paragraph style={{ fontSize: '16px', marginBottom: 24 }}>
+        <Paragraph style={{ 
+          fontSize: '16px', 
+          marginBottom: 24,
+          color: isDarkMode ? '#FFFFFFA6' : '#000000A6'
+        }}>
           Get detailed insights into your codebase with our AI-powered analysis engine.
         </Paragraph>
         <Space>
@@ -200,13 +218,15 @@ const Home = () => {
       <div style={{ 
         textAlign: 'center', 
         padding: '20px 0', 
-        color: '#8c8c8c',
+        color: isDarkMode ? '#FFFFFF73' : '#00000073',
         ...getContainerStyle({
-          borderRadius: '8px',
-          background: isDarkMode ? 'transparent' : '#ffffff'
+          borderRadius: '8px'
         })
       }}>
-        <Paragraph type="secondary">
+        <Paragraph style={{ 
+          color: isDarkMode ? '#FFFFFF73' : '#00000073',
+          margin: 0
+        }}>
           © 2025 DevInsight. Built with React, Node.js, and AI. Powered by Ant Design.
         </Paragraph>
       </div>
