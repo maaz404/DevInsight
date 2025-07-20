@@ -1,0 +1,27 @@
+{
+  "name": "devinsight",
+  "version": "1.0.0",
+  "description": "DevInsight - AI GitHub Analyzer",
+  "private": true,
+  "workspaces": [
+    "client",
+    "server"
+  ],
+  "scripts": {
+    "start": "cd client && npm run dev",
+    "start:server": "cd server && npm start",
+    "dev": "cd client && npm run dev",
+    "dev:client": "cd client && npm run dev",
+    "dev:server": "cd server && npm run dev",
+    "dev:both": "concurrently \"npm run dev:client\" \"npm run dev:server\"",
+    "build": "cd client && npm run build",
+    "build:client": "cd client && npm run build",
+    "preview": "cd client && npm run preview",
+    "install:client": "cd client && npm install",
+    "install:server": "cd server && npm install",
+    "install:all": "npm run install:client && npm run install:server"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}

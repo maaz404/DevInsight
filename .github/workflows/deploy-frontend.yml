@@ -1,0 +1,51 @@
+name: 🚀 Deploy Frontend to GitHub Pages
+
+on:
+  push:
+    branches: [ main, master ]
+    paths: 
+      - 'client/**'
+      - '.github/workflows/deploy-frontend.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths: 
+      - 'client/**'
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: ⬇️ Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 🟢 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          cache-dependency-path: 'client/package-lock.json'
+
+      - name: 📦 Install dependencies
+        run: |
+          cd client
+          npm ci
+
+      - name: 🔨 Build application
+        run: |
+          cd client
+          npm run build
+        env:
+          VITE_API_URL: ${{ secrets.VITE_API_URL || 'https://your-api-domain.com/api' }}
+
+      - name: 🚀 Deploy to GitHub Pages
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./client/dist
+          # For username.github.io repo, files go to the root
+          # Remove cname if you want to use maaz404.github.io domain
+          cname: devinsight.me
