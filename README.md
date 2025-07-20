@@ -378,7 +378,7 @@ copies or substantial portions of the Software.
 **Maaz Sheikh**
 
 [![GitHub](https://img.shields.io/badge/GitHub-@maaz404-181717?style=flat&logo=github)](https://github.com/maaz404)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Maaz%20Sheikh-0A66C2?style=flat&logo=linkedin)](https://linkedin.com/in/maaz-sheikh)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Maaz%20Sheikh-0A66C2?style=flat&logo=linkedin)](https://www.linkedin.com/in/sheikhmaazakbar/)
 
 _Full-Stack Developer passionate about AI-powered solutions_
 
