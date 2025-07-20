@@ -2,19 +2,19 @@ name: 🚀 Deploy Frontend to GitHub Pages
 
 on:
   push:
-    branches: [ main, master ]
-    paths: 
-      - 'client/**'
-      - '.github/workflows/deploy-frontend.yml'
+    branches: [main, master]
+    paths:
+      - "client/**"
+      - ".github/workflows/deploy-frontend.yml"
   pull_request:
-    branches: [ main, master ]
-    paths: 
-      - 'client/**'
+    branches: [main, master]
+    paths:
+      - "client/**"
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: ⬇️ Checkout repository
         uses: actions/checkout@v4
@@ -24,9 +24,9 @@ jobs:
       - name: 🟢 Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          cache: 'npm'
-          cache-dependency-path: 'client/package-lock.json'
+          node-version: "18"
+          cache: "npm"
+          cache-dependency-path: "client/package-lock.json"
 
       - name: 📦 Install dependencies
         run: |
