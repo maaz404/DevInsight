@@ -7,6 +7,7 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gray-50">
+        {/* DevInsight - AI-Powered Repository Analyzer */}
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/analyze" element={<AnalyzeRepo />} />
