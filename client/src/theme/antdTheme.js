@@ -13,18 +13,29 @@ export const lightTheme = {
     wireframe: false,
     colorBgContainer: "#ffffff",
     colorBgElevated: "#ffffff",
-    colorBgLayout: "#f5f5f5",
+    colorBgLayout: "#f8f9fa",
+    colorBorder: "#e0e0e0",
+    colorBorderSecondary: "#f0f0f0",
   },
   components: {
     Layout: {
       headerBg: "#ffffff",
-      siderBg: "#001529",
-      bodyBg: "#f5f5f5",
+      siderBg: "#ffffff", // Light sidebar for light mode
+      bodyBg: "#f8f9fa",
+      headerHeight: 64,
+      headerPadding: "0 24px",
     },
     Menu: {
-      darkItemBg: "#001529",
-      darkItemSelectedBg: "#1890ff",
-      darkItemHoverBg: "#1565c0",
+      itemBg: "#ffffff",
+      itemSelectedBg: "#e6f7ff",
+      itemHoverBg: "#f0f9ff",
+      itemColor: "#333333",
+      itemSelectedColor: "#1890ff",
+      itemHoverColor: "#1890ff",
+      // Dark menu items for light theme sidebar
+      darkItemBg: "#ffffff", 
+      darkItemSelectedBg: "#e6f7ff",
+      darkItemHoverBg: "#f0f9ff",
     },
     Card: {
       borderRadiusLG: 8,
@@ -50,17 +61,24 @@ export const darkTheme = {
     colorBgContainer: "#141414",
     colorBgElevated: "#1f1f1f",
     colorBgLayout: "#000000",
+    colorBorder: "transparent",
+    colorBorderSecondary: "transparent",
   },
   components: {
     Layout: {
       headerBg: "#141414",
-      siderBg: "#001529",
+      siderBg: "#001529", // Keep dark sidebar for dark mode
       bodyBg: "#000000",
+      headerHeight: 64,
+      headerPadding: "0 24px",
     },
     Menu: {
       darkItemBg: "#001529",
       darkItemSelectedBg: "#1890ff",
       darkItemHoverBg: "#1565c0",
+      darkItemColor: "#ffffff",
+      darkItemSelectedColor: "#ffffff",
+      darkItemHoverColor: "#ffffff",
     },
     Card: {
       borderRadiusLG: 8,

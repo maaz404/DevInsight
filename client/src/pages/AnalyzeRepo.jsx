@@ -60,6 +60,14 @@ const AnalyzeRepo = () => {
     { title: 'Generating Report', description: 'Compiling AI-powered insights...' }
   ];
 
+  // Conditional styling helper function
+  const getContainerStyle = (additionalStyles = {}) => ({
+    border: isDarkMode ? 'none' : '1px solid #e0e0e0',
+    boxShadow: isDarkMode ? 'none' : '0 1px 4px rgba(0,0,0,0.1)',
+    transition: 'all 0.3s ease',
+    ...additionalStyles
+  });
+
   const handleSubmit = async (values) => {
     // Validate GitHub URL format more thoroughly
     const githubUrlPattern = /^https:\/\/github\.com\/[\w\-\.]+\/[\w\-\.]+\/?$/;
@@ -130,11 +138,20 @@ const AnalyzeRepo = () => {
   return (
     <div style={{ 
       padding: '24px', 
-      background: isDarkMode ? '#000000' : '#f5f5f5', 
-      minHeight: '100vh' 
+      background: isDarkMode ? '#000000' : '#f8f9fa', 
+      minHeight: '100vh',
+      transition: 'background-color 0.3s ease'
     }}>
       {/* Header */}
-      <div style={{ textAlign: 'center', marginBottom: 32 }}>
+      <div style={{ 
+        textAlign: 'center', 
+        marginBottom: 32,
+        ...getContainerStyle({
+          padding: '32px',
+          borderRadius: '8px',
+          background: isDarkMode ? 'transparent' : '#ffffff'
+        })
+      }}>
         <Title level={2} style={{ color: isDarkMode ? '#fff' : '#000' }}>
           <GithubOutlined style={{ marginRight: 8, color: '#1890ff' }} />
           Analyze GitHub Repository
@@ -150,7 +167,9 @@ const AnalyzeRepo = () => {
           marginBottom: 24, 
           maxWidth: 800, 
           margin: '0 auto 24px',
-          boxShadow: isDarkMode ? '0 4px 12px rgba(0,0,0,0.15)' : '0 4px 12px rgba(0,0,0,0.1)'
+          ...getContainerStyle({
+            boxShadow: isDarkMode ? 'none' : '0 4px 12px rgba(0,0,0,0.1)'
+          })
         }}
       >
         <Form
@@ -208,7 +227,11 @@ const AnalyzeRepo = () => {
 
       {/* Loading State with Steps */}
       {loading && (
-        <Card style={{ textAlign: 'center', marginBottom: 24 }}>
+        <Card style={{ 
+          textAlign: 'center', 
+          marginBottom: 24,
+          ...getContainerStyle()
+        }}>
           <Spin size="large" />
           <Title level={4} style={{ marginTop: 16, marginBottom: 24 }}>
             Analyzing Repository...
@@ -234,26 +257,31 @@ const AnalyzeRepo = () => {
 
       {/* Error State */}
       {error && (
-        <Result
-          status="error"
-          title="Analysis Failed"
-          subTitle={error}
-          extra={[
-            <Button 
-              type="primary" 
-              key="retry"
-              onClick={() => setError('')}
-            >
-              Try Again
-            </Button>
-          ]}
-          style={{ marginBottom: 24 }}
-        />
+        <div style={getContainerStyle({ marginBottom: 24, borderRadius: '8px' })}>
+          <Result
+            status="error"
+            title="Analysis Failed"
+            subTitle={error}
+            extra={[
+              <Button 
+                type="primary" 
+                key="retry"
+                onClick={() => setError('')}
+              >
+                Try Again
+              </Button>
+            ]}
+          />
+        </div>
       )}
 
       {/* Empty State */}
       {!loading && !error && !results && (
-        <Card style={{ textAlign: 'center', marginBottom: 24 }}>
+        <Card style={{ 
+          textAlign: 'center', 
+          marginBottom: 24,
+          ...getContainerStyle()
+        }}>
           <Empty
             image={Empty.PRESENTED_IMAGE_SIMPLE}
             description={
@@ -276,7 +304,10 @@ const AnalyzeRepo = () => {
                 Repository Information
               </Space>
             }
-            style={{ marginBottom: 24 }}
+            style={{ 
+              marginBottom: 24,
+              ...getContainerStyle()
+            }}
             extra={
               <Space>
                 {detectLanguages(results.repositoryInfo).map(lang => (
@@ -326,7 +357,10 @@ const AnalyzeRepo = () => {
                   AI Analysis Results
                 </Space>
               }
-              style={{ marginBottom: 24 }}
+              style={{ 
+                marginBottom: 24,
+                ...getContainerStyle()
+              }}
             >
               {/* Overall Readiness Score */}
               <div style={{ textAlign: 'center', marginBottom: 32 }}>
@@ -492,7 +526,10 @@ const AnalyzeRepo = () => {
           {/* Analysis Details */}
           <Card 
             title="Analysis Details"
-            style={{ marginBottom: 24 }}
+            style={{ 
+              marginBottom: 24,
+              ...getContainerStyle()
+            }}
           >
             <Row gutter={[16, 16]}>
               <Col xs={24} sm={12} md={6}>

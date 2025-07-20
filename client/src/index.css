@@ -5,6 +5,7 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  transition: background-color 0.3s ease;
 }
 
 code {
@@ -31,6 +32,17 @@ code {
   }
 }
 
+/* Enhanced smooth transitions for theme switching */
+.ant-layout,
+.ant-layout-header,
+.ant-layout-sider,
+.ant-layout-content,
+.ant-card,
+.ant-menu,
+.ant-drawer {
+  transition: all 0.3s ease;
+}
+
 /* Dark mode scrollbar */
 .ant-layout::-webkit-scrollbar {
   width: 6px;
@@ -49,15 +61,32 @@ code {
   background: rgba(255, 255, 255, 0.5);
 }
 
-/* Custom card hover effects */
+/* Custom card hover effects with border transitions */
+.ant-card {
+  transition: all 0.3s ease;
+}
+
 .ant-card:hover {
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transition: box-shadow 0.3s ease;
+  transform: translateY(-2px);
 }
 
 /* Theme toggle animations */
 .ant-switch {
   transition: all 0.3s ease;
+}
+
+/* Sidebar transition effects */
+.ant-layout-sider {
+  transition: all 0.3s ease !important;
+}
+
+.ant-menu {
+  transition: all 0.3s ease !important;
+}
+
+.ant-menu-item {
+  transition: all 0.3s ease !important;
 }
 
 /* Mobile responsive adjustments */
@@ -73,4 +102,20 @@ code {
   .ant-typography h2 {
     font-size: 24px !important;
   }
+  
+  /* Improve mobile drawer experience */
+  .mobile-drawer .ant-drawer-body {
+    transition: background-color 0.3s ease;
+  }
+}
+
+/* Enhanced border animations for light mode */
+.light-mode-border {
+  transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* Smooth color transitions for text and icons */
+.ant-typography,
+.anticon {
+  transition: color 0.3s ease;
 }

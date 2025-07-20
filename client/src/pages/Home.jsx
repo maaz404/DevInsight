@@ -15,20 +15,40 @@ const { Title, Paragraph } = Typography;
 const Home = () => {
   const { isDarkMode } = useTheme();
   
+  // Conditional styling helper function
+  const getContainerStyle = (additionalStyles = {}) => ({
+    border: isDarkMode ? 'none' : '1px solid #e0e0e0',
+    boxShadow: isDarkMode ? 'none' : '0 1px 4px rgba(0,0,0,0.1)',
+    transition: 'all 0.3s ease',
+    ...additionalStyles
+  });
+  
   return (
     <div style={{ 
       padding: '0 24px', 
-      background: isDarkMode ? '#000000' : '#f5f5f5', 
-      minHeight: '100vh' 
+      background: isDarkMode ? '#000000' : '#f8f9fa', 
+      minHeight: '100vh',
+      transition: 'background-color 0.3s ease'
     }}>
       {/* Hero Section */}
-      <div style={{ textAlign: 'center', padding: '60px 0' }}>
+      <div style={{ 
+        textAlign: 'center', 
+        padding: '60px 0',
+        ...getContainerStyle({
+          margin: '0 auto 40px',
+          maxWidth: '1200px',
+          borderRadius: '8px',
+          background: isDarkMode ? 'transparent' : '#ffffff',
+          marginTop: '24px'
+        })
+      }}>
         <Title 
           level={1} 
           style={{ 
             fontSize: '48px', 
             marginBottom: 16,
-            color: isDarkMode ? '#fff' : '#000'
+            color: isDarkMode ? '#fff' : '#000',
+            transition: 'color 0.3s ease'
           }}
         >
           <GithubOutlined style={{ marginRight: 16, color: '#1890ff' }} />
@@ -63,7 +83,11 @@ const Home = () => {
         <Col xs={24} md={8}>
           <Card 
             hoverable
-            style={{ textAlign: 'center', height: '100%' }}
+            style={{ 
+              textAlign: 'center', 
+              height: '100%',
+              ...getContainerStyle()
+            }}
             bodyStyle={{ padding: 32 }}
           >
             <div style={{ 
@@ -74,7 +98,8 @@ const Home = () => {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              margin: '0 auto 16px'
+              margin: '0 auto 16px',
+              transition: 'background-color 0.3s ease'
             }}>
               <CodeOutlined style={{ fontSize: 32, color: '#1890ff' }} />
             </div>
@@ -89,7 +114,11 @@ const Home = () => {
         <Col xs={24} md={8}>
           <Card 
             hoverable
-            style={{ textAlign: 'center', height: '100%' }}
+            style={{ 
+              textAlign: 'center', 
+              height: '100%',
+              ...getContainerStyle()
+            }}
             bodyStyle={{ padding: 32 }}
           >
             <div style={{ 
@@ -100,7 +129,8 @@ const Home = () => {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              margin: '0 auto 16px'
+              margin: '0 auto 16px',
+              transition: 'background-color 0.3s ease'
             }}>
               <ThunderboltOutlined style={{ fontSize: 32, color: '#fa8c16' }} />
             </div>
@@ -115,7 +145,11 @@ const Home = () => {
         <Col xs={24} md={8}>
           <Card 
             hoverable
-            style={{ textAlign: 'center', height: '100%' }}
+            style={{ 
+              textAlign: 'center', 
+              height: '100%',
+              ...getContainerStyle()
+            }}
             bodyStyle={{ padding: 32 }}
           >
             <div style={{ 
@@ -126,7 +160,8 @@ const Home = () => {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center',
-              margin: '0 auto 16px'
+              margin: '0 auto 16px',
+              transition: 'background-color 0.3s ease'
             }}>
               <TeamOutlined style={{ fontSize: 32, color: '#52c41a' }} />
             </div>
@@ -140,7 +175,11 @@ const Home = () => {
       </Row>
 
       {/* Call to Action */}
-      <Card style={{ textAlign: 'center', marginBottom: 40 }}>
+      <Card style={{ 
+        textAlign: 'center', 
+        marginBottom: 40,
+        ...getContainerStyle()
+      }}>
         <Title level={3} style={{ marginBottom: 16 }}>Ready to Analyze Your Repository?</Title>
         <Paragraph style={{ fontSize: '16px', marginBottom: 24 }}>
           Get detailed insights into your codebase with our AI-powered analysis engine.
@@ -158,7 +197,15 @@ const Home = () => {
       </Card>
 
       {/* Footer */}
-      <div style={{ textAlign: 'center', padding: '20px 0', color: '#8c8c8c' }}>
+      <div style={{ 
+        textAlign: 'center', 
+        padding: '20px 0', 
+        color: '#8c8c8c',
+        ...getContainerStyle({
+          borderRadius: '8px',
+          background: isDarkMode ? 'transparent' : '#ffffff'
+        })
+      }}>
         <Paragraph type="secondary">
           © 2025 DevInsight. Built with React, Node.js, and AI. Powered by Ant Design.
         </Paragraph>

@@ -44,23 +44,28 @@ function AppContent() {
       <div style={{ 
         height: 64, 
         margin: '16px', 
-        color: '#fff', 
+        color: isDarkMode ? '#fff' : '#1890ff', 
         fontWeight: 'bold', 
         fontSize: 18, 
         textAlign: 'center',
         display: 'flex',
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
+        transition: 'color 0.3s ease'
       }}>
         <GithubOutlined style={{ marginRight: 8 }} />
         DevInsight
       </div>
       <Menu 
-        theme="dark" 
+        theme={isDarkMode ? "dark" : "light"} 
         mode="inline" 
         selectedKeys={getSelectedKey()}
         items={menuItems}
         onClick={() => setDrawerVisible(false)}
+        style={{
+          border: 'none',
+          transition: 'all 0.3s ease'
+        }}
       />
     </>
   );
@@ -71,7 +76,14 @@ function AppContent() {
       <Sider 
         breakpoint="lg" 
         collapsedWidth="0"
-        style={{ display: 'none' }}
+        style={{ 
+          display: 'none',
+          background: isDarkMode ? '#001529' : '#ffffff',
+          border: isDarkMode ? 'none' : '1px solid #e0e0e0',
+          borderRight: isDarkMode ? 'none' : '1px solid #e0e0e0',
+          boxShadow: isDarkMode ? 'none' : '2px 0 8px rgba(0,0,0,0.1)',
+          transition: 'all 0.3s ease'
+        }}
         className="desktop-sider"
       >
         <SidebarContent />
@@ -88,17 +100,24 @@ function AppContent() {
         placement="left"
         onClose={() => setDrawerVisible(false)}
         open={drawerVisible}
-        bodyStyle={{ padding: 0, backgroundColor: '#001529' }}
+        bodyStyle={{ 
+          padding: 0, 
+          backgroundColor: isDarkMode ? '#001529' : '#ffffff',
+          transition: 'background-color 0.3s ease'
+        }}
         width={280}
         className="mobile-drawer"
       >
         <Menu 
-          theme="dark" 
+          theme={isDarkMode ? "dark" : "light"} 
           mode="inline" 
           selectedKeys={getSelectedKey()}
           items={menuItems}
           onClick={() => setDrawerVisible(false)}
-          style={{ border: 'none' }}
+          style={{ 
+            border: 'none',
+            transition: 'all 0.3s ease'
+          }}
         />
       </Drawer>
 
@@ -109,8 +128,9 @@ function AppContent() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'space-between',
-          boxShadow: '0 1px 4px rgba(0,21,41,.08)',
-          borderBottom: `1px solid ${isDarkMode ? '#303030' : '#f0f0f0'}`
+          boxShadow: isDarkMode ? 'none' : '0 1px 4px rgba(0,21,41,.08)',
+          borderBottom: isDarkMode ? 'none' : '1px solid #e0e0e0',
+          transition: 'all 0.3s ease'
         }}>
           {/* Mobile Menu Button */}
           <Button
@@ -159,7 +179,8 @@ function AppContent() {
         <Content style={{ 
           margin: '0', 
           overflow: 'initial',
-          backgroundColor: isDarkMode ? '#000000' : '#f5f5f5'
+          backgroundColor: isDarkMode ? '#000000' : '#f8f9fa',
+          transition: 'background-color 0.3s ease'
         }}>
           <Routes>
             <Route path="/" element={<Home />} />
