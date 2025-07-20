@@ -46,6 +46,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./client/dist
-          # For username.github.io repo, files go to the root
-          # Remove cname if you want to use maaz404.github.io domain
+          # For project repository, deploy to gh-pages branch
+          # Will be available at https://maaz404.github.io/Devinsight
+          # Or your custom domain if configured
           cname: devinsight.me
