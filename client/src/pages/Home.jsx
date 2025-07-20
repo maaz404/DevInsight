@@ -15,19 +15,19 @@ const { Title, Paragraph } = Typography;
 const Home = () => {
   const { isDarkMode } = useTheme();
   
-  // Enhanced conditional styling helper function using softer design tokens
+  // Enhanced conditional styling helper function with improved visual structure
   const getContainerStyle = (additionalStyles = {}) => ({
-    border: isDarkMode ? 'none' : 'none', // Remove borders for softer appearance
-    boxShadow: isDarkMode ? 'none' : '0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 4px 0 rgba(0, 0, 0, 0.04)', // Soft shadows
+    border: isDarkMode ? 'none' : '1px solid #C9CED6', // Visible borders for structure
+    boxShadow: isDarkMode ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04)', // Enhanced shadows
     transition: 'all 0.3s ease',
-    background: isDarkMode ? '#1F1F1F' : '#fcfcfc', // Near-white for containers
+    background: isDarkMode ? '#1F1F1F' : '#FAFAFA', // Raised container background
     ...additionalStyles
   });
   
   return (
     <div style={{ 
       padding: '0 24px', 
-      background: isDarkMode ? '#141414' : '#f5f7fa', // Soft off-white background
+      background: isDarkMode ? '#141414' : '#EEF1F5', // Darker muted base background
       minHeight: '100vh',
       transition: 'background-color 0.3s ease'
     }}>
@@ -47,7 +47,7 @@ const Home = () => {
           style={{ 
             fontSize: '48px', 
             marginBottom: 16,
-            color: isDarkMode ? '#FFFFFFD9' : '#1f1f1f',
+            color: isDarkMode ? '#FFFFFFD9' : '#1C1C1C', // Enhanced text contrast
             transition: 'color 0.3s ease'
           }}
         >
@@ -57,7 +57,7 @@ const Home = () => {
         <Title level={2} style={{ 
           fontWeight: 400, 
           marginBottom: 24,
-          color: isDarkMode ? '#FFFFFFA6' : '#4b4b4b'
+          color: isDarkMode ? '#FFFFFFA6' : '#5A5A5A' // Improved secondary text contrast
         }}>
           AI-Powered GitHub Repository Analyzer
         </Title>
@@ -67,7 +67,7 @@ const Home = () => {
           <Paragraph style={{ 
             fontSize: '18px', 
             marginBottom: 32,
-            color: isDarkMode ? '#FFFFFFA6' : '#4b4b4b'
+            color: isDarkMode ? '#FFFFFFA6' : '#5A5A5A' // Consistent secondary text
           }}>
             Unlock comprehensive insights from your GitHub repositories with advanced AI algorithms. 
             Perfect for developers, teams, and project managers seeking to improve code quality and productivity.

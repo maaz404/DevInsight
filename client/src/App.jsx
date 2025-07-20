@@ -80,8 +80,9 @@ function AppContent() {
         theme={isDarkMode ? "dark" : "light"}
         style={{ 
           display: 'none',
-          background: isDarkMode ? '#141414' : '#f8f9fa',
-          borderRight: isDarkMode ? 'none' : '1px solid #e0e0e0',
+          background: isDarkMode ? '#141414' : '#F0F2F5',
+          borderRight: isDarkMode ? 'none' : '2px solid #C9CED6',
+          boxShadow: isDarkMode ? 'none' : '2px 0 8px rgba(0, 0, 0, 0.06)',
           transition: 'all 0.3s ease'
         }}
         className="desktop-sider"
@@ -92,7 +93,7 @@ function AppContent() {
       {/* Mobile Drawer */}
       <Drawer
         title={
-          <Space style={{ color: isDarkMode ? '#FFFFFFD9' : '#1f1f1f' }}>
+          <Space style={{ color: isDarkMode ? '#FFFFFFD9' : '#1C1C1C' }}>
             <GithubOutlined />
             DevInsight
           </Space>
@@ -102,7 +103,7 @@ function AppContent() {
         open={drawerVisible}
         bodyStyle={{ 
           padding: 0, 
-          backgroundColor: isDarkMode ? '#141414' : '#f8f9fa',
+          backgroundColor: isDarkMode ? '#141414' : '#F0F2F5',
           transition: 'background-color 0.3s ease'
         }}
         width={280}
@@ -117,7 +118,7 @@ function AppContent() {
           style={{ 
             border: 'none',
             transition: 'all 0.3s ease',
-            background: isDarkMode ? '#141414' : '#f8f9fa'
+            background: isDarkMode ? '#141414' : '#F0F2F5'
           }}
         />
       </Drawer>
@@ -151,7 +152,7 @@ function AppContent() {
           <div style={{ 
             fontWeight: 'bold', 
             fontSize: 18,
-            color: isDarkMode ? '#FFFFFFD9' : '#1f1f1f',
+            color: isDarkMode ? '#FFFFFFD9' : '#1C1C1C',
             flex: 1,
             textAlign: 'center',
             transition: 'color 0.3s ease'

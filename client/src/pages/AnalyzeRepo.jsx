@@ -60,12 +60,12 @@ const AnalyzeRepo = () => {
     { title: 'Generating Report', description: 'Compiling AI-powered insights...' }
   ];
 
-  // Enhanced conditional styling helper function using softer design tokens
+  // Enhanced conditional styling helper function with improved visual structure
   const getContainerStyle = (additionalStyles = {}) => ({
-    border: isDarkMode ? 'none' : 'none', // Remove borders for softer appearance
-    boxShadow: isDarkMode ? 'none' : '0 2px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 4px 0 rgba(0, 0, 0, 0.04)', // Soft shadows
+    border: isDarkMode ? 'none' : '1px solid #C9CED6', // Visible borders for structure
+    boxShadow: isDarkMode ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04)', // Enhanced shadows
     transition: 'all 0.3s ease',
-    background: isDarkMode ? '#1F1F1F' : '#fcfcfc', // Near-white for containers
+    background: isDarkMode ? '#1F1F1F' : '#FAFAFA', // Raised container background
     ...additionalStyles
   });
 
@@ -139,7 +139,7 @@ const AnalyzeRepo = () => {
   return (
     <div style={{ 
       padding: '24px', 
-      background: isDarkMode ? '#141414' : '#f5f7fa', // Soft off-white background
+      background: isDarkMode ? '#141414' : '#EEF1F5', // Darker muted base background
       minHeight: '100vh',
       transition: 'background-color 0.3s ease'
     }}>
