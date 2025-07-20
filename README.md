@@ -1,261 +1,240 @@
-# 🚀 DevInsight - AI-Powered Repository Analyzer
+# DevInsight - AI GitHub Analyzer
 
-> **Transform your GitHub repositories into actionable insights with AI-powered analysis**
+🚀 **Transform your GitHub repositories into actionable insights with AI-powered analysis**
 
-[![React](https://img.shields.io/badge/React-18.x-blue.svg)](https://reactjs.org/)
-[![Node.js](https://img.shields.io/badge/Node.js-18.x-green.svg)](https://nodejs.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green.svg)](https://mongodb.com/)
-[![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-orange.svg)](https://openai.com/)
-[![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-blue.svg)](https://tailwindcss.com/)
+[![Deploy to GitHub Pages](https://github.com/maaz404/Devinsight/actions/workflows/deploy-frontend.yml/badge.svg)](https://github.com/maaz404/Devinsight/actions/workflows/deploy-frontend.yml)
+[![Live Demo](https://img.shields.io/badge/demo-live-brightgreen)](https://maaz404.github.io/Devinsight)
 
 ## 🌟 Overview
 
 DevInsight is a comprehensive full-stack application that analyzes GitHub repositories using AI to provide detailed insights about code quality, documentation, and best practices. Get instant feedback on your projects with beautiful, actionable reports.
 
-![DevInsight Demo](https://via.placeholder.com/800x400?text=Add+Your+App+Screenshot+Here)
+## 🛠️ Tech Stack
+
+![React](https://img.shields.io/badge/React-18.x-61DAFB?style=flat&logo=react)
+![Node.js](https://img.shields.io/badge/Node.js-18.x-339933?style=flat&logo=node.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat&logo=mongodb)
+![OpenAI](https://img.shields.io/badge/OpenAI-GPT--4-412991?style=flat&logo=openai)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=flat&logo=tailwindcss)
+![Vite](https://img.shields.io/badge/Vite-Build-646CFF?style=flat&logo=vite)
+
+## ⚡ Quick Start
+
+### Prerequisites
+- Node.js 18+
+- npm or yarn
+- Git
+
+### Installation
+```bash
+# Clone the repository
+git clone https://github.com/maaz404/Devinsight.git
+cd Devinsight
+
+# Install all dependencies
+npm run install:all
+
+# Start development servers
+npm run dev:both
+```
+
+### Development
+```bash
+# Frontend only (React + Vite)
+npm run dev:client
+
+# Backend only (Node.js + Express)
+npm run dev:server
+
+# Build for production
+npm run build
+```
+
+## 🚀 Auto-Deployment with GitHub Actions
+
+This project uses **GitHub Actions** for automatic deployment to GitHub Pages. Every time you push changes to the `client/` folder, the site automatically rebuilds and deploys!
+
+### 🔄 Deployment Workflow
+
+```mermaid
+graph LR
+    A[Push to main] --> B[GitHub Actions Triggered]
+    B --> C[Install Dependencies]
+    C --> D[Build React App]
+    D --> E[Deploy to GitHub Pages]
+    E --> F[Live Site Updated]
+```
+
+### ✨ Features
+- **🚀 Automatic Deployment**: Push changes → Live in 2-3 minutes
+- **🎯 Smart Triggers**: Only deploys when `client/` files change
+- **🔒 Secure**: Uses GitHub's built-in GITHUB_TOKEN
+- **📊 Monitoring**: Track deployment status in Actions tab
+- **⚡ Fast Builds**: Optimized with Vite for quick builds
+
+### 🛠️ How It Works
+
+1. **Make UI Changes** in the `client/src/` folder
+2. **Commit & Push** your changes:
+   ```bash
+   git add .
+   git commit -m "✨ Updated landing page design"
+   git push origin main
+   ```
+3. **GitHub Actions Automatically**:
+   - Detects changes in client folder
+   - Installs dependencies with `npm ci`
+   - Builds the React app with `npm run build`
+   - Deploys to GitHub Pages
+4. **Live Site Updates** at [https://maaz404.github.io/Devinsight](https://maaz404.github.io/Devinsight)
+
+### 📋 Deployment Configuration
+
+```yaml
+# .github/workflows/deploy-frontend.yml
+name: 🚀 Deploy Frontend to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+    paths: ['client/**']
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+```
+
+### 🎯 Development Workflow
+
+```bash
+# 1. Local Development (instant feedback)
+npm run dev:client
+# Make changes, see them at http://localhost:5173
+
+# 2. Production Testing (optional)
+npm run build
+npm run preview
+
+# 3. Deploy to Production
+git add .
+git commit -m "🎨 Improved dashboard UI"
+git push origin main
+# ✅ Auto-deployed in ~2 minutes!
+```
+
+## 📁 Project Structure
+
+```
+DevInsight/
+├── .github/workflows/      # 🚀 GitHub Actions for auto-deployment
+│   └── deploy-frontend.yml
+├── client/                 # ⚛️ React Frontend (Vite)
+│   ├── src/
+│   │   ├── components/
+│   │   ├── pages/
+│   │   ├── utils/
+│   │   └── App.jsx
+│   ├── public/
+│   ├── package.json
+│   └── vite.config.js
+├── server/                 # 🟢 Node.js Backend
+│   ├── routes/
+│   ├── models/
+│   ├── controllers/
+│   ├── package.json
+│   └── index.js
+├── package.json           # 📦 Workspace configuration
+└── README.md
+```
 
 ## ✨ Features
 
-### 🎯 **Core Functionality**
-
-- **🔍 Repository Analysis** - Deep analysis of GitHub repositories
+### 🔍 Core Functionality
+- **📊 Repository Analysis** - Deep analysis of GitHub repositories
 - **🤖 AI-Powered Insights** - GPT-4 powered code quality assessment
-- **📊 Visual Reports** - Beautiful dashboards with score meters and metrics
+- **📈 Visual Reports** - Beautiful dashboards with score meters and metrics
 - **💾 Data Persistence** - MongoDB storage for analysis history
-- **🚀 Real-time Processing** - Fast analysis with progress indicators
+- **⚡ Real-time Processing** - Fast analysis with progress indicators
 
-### 🛡️ **Security & Performance**
-
-- **🔒 Rate Limiting** - API protection and abuse prevention
-- **✅ Input Validation** - Comprehensive request validation
-- **🌐 CORS Protection** - Secure cross-origin requests
-- **⚡ Optimized Performance** - Efficient data processing
-
-### 🎨 **User Experience**
-
+### 🛡️ Security & Performance
+- **🔐 Secure API Integration** - Protected GitHub token handling
+- **⚡ Optimized Builds** - Vite for lightning-fast development
 - **📱 Responsive Design** - Works on all devices
-- **🎭 Beautiful UI** - Modern design with Tailwind CSS
-- **🔄 Error Handling** - User-friendly error messages
-- **📈 Progress Tracking** - Real-time analysis progress
+- **🚀 CDN Delivery** - Fast global content delivery via GitHub Pages
 
-## 🛠️ Tech Stack
+## 🌐 Live Demo
 
-### **Frontend**
+**Frontend**: [https://maaz404.github.io/Devinsight](https://maaz404.github.io/Devinsight)
 
-- **React 18** - Modern React with hooks
-- **Tailwind CSS** - Utility-first CSS framework
-- **Axios** - HTTP client for API calls
-- **React Router** - Client-side routing
+## 📊 Deployment Status
 
-### **Backend**
-
-- **Node.js** - JavaScript runtime
-- **Express.js** - Web application framework
-- **MongoDB** - NoSQL database with Mongoose ODM
-- **OpenAI API** - GPT-4 for AI analysis
-
-### **DevOps & Tools**
-
-- **MongoDB Atlas** - Cloud database
-- **Environment Variables** - Secure configuration
-- **RESTful APIs** - Clean API architecture
-
-## 🚀 Quick Start
-
-### **Prerequisites**
-
-- Node.js 18+
-- MongoDB Atlas account
-- OpenAI API key
-
-### **Installation**
-
-1. **Clone the repository**
-
-```bash
-git clone https://github.com/YOUR_USERNAME/devinsight.git
-cd devinsight
-```
-
-2. **Install dependencies**
-
-```bash
-# Install server dependencies
-cd server
-npm install
-
-# Install client dependencies
-cd ../client
-npm install
-```
-
-3. **Environment Setup**
-
-```bash
-# Copy environment template
-cd ../server
-cp .env.example .env
-```
-
-4. **Configure your `.env` file**
-
-```env
-PORT=5000
-NODE_ENV=development
-MONGO_URI=your_mongodb_atlas_connection_string
-OPENAI_API_KEY=your_openai_api_key
-FRONTEND_URL=http://localhost:3000
-JWT_SECRET=your_jwt_secret
-```
-
-5. **Start the application**
-
-```bash
-# Terminal 1 - Start backend server
-cd server
-npm start
-
-# Terminal 2 - Start frontend
-cd client
-npm start
-```
-
-6. **Access the application**
-
-```
-Frontend: http://localhost:3000
-Backend API: http://localhost:5000
-```
-
-## 📖 Usage
-
-1. **Enter GitHub Repository URL**
-
-   - Navigate to the analysis page
-   - Enter any public GitHub repository URL
-   - Click "Analyze Repository"
-
-2. **View AI Analysis**
-
-   - Code quality assessment with scores
-   - README quality evaluation
-   - Improvement recommendations
-   - Technical debt analysis
-
-3. **Review Results**
-   - Overall readiness score
-   - Detailed breakdowns by category
-   - Actionable improvement suggestions
-   - Historical analysis data
-
-## 🏗️ Project Structure
-
-```
-devinsight/
-├── client/                 # React frontend
-│   ├── public/
-│   ├── src/
-│   │   ├── components/     # Reusable UI components
-│   │   ├── pages/          # Page components
-│   │   ├── utils/          # Utility functions
-│   │   └── App.jsx         # Main app component
-│   └── package.json
-├── server/                 # Express backend
-│   ├── models/             # MongoDB models
-│   ├── routes/             # API routes
-│   ├── services/           # Business logic
-│   ├── middleware/         # Custom middleware
-│   └── index.js            # Server entry point
-├── README.md
-└── .gitignore
-```
-
-## 🔧 API Endpoints
-
-### **Analysis**
-
-- `POST /api/analyze` - Analyze GitHub repository
-- `GET /api/analyze/test` - Test endpoint
-
-### **Projects**
-
-- `GET /api/projects` - Get all analyzed projects
-- `GET /api/projects/:id` - Get specific project analysis
-
-## 🎯 Key Features Demonstrated
-
-### **Full-Stack Development**
-
-- ✅ Frontend-backend communication
-- ✅ RESTful API design
-- ✅ Database integration
-- ✅ External API integration (GitHub, OpenAI)
-
-### **Modern React Development**
-
-- ✅ Functional components with hooks
-- ✅ Component composition
-- ✅ State management
-- ✅ Error boundaries
-
-### **Backend Engineering**
-
-- ✅ Express.js middleware
-- ✅ MongoDB database design
-- ✅ API rate limiting
-- ✅ Input validation and sanitization
-
-### **AI Integration**
-
-- ✅ OpenAI GPT-4 API
-- ✅ Prompt engineering
-- ✅ AI response processing
-- ✅ Intelligent code analysis
-
-## 🚀 Deployment
-
-### **Frontend (Vercel/Netlify)**
-
-```bash
-cd client
-npm run build
-# Deploy build folder
-```
-
-### **Backend (Heroku/Railway)**
-
-```bash
-cd server
-# Add Procfile: web: node index.js
-# Configure environment variables
-# Deploy to platform
-```
+You can monitor deployment status at:
+- **Actions Tab**: [https://github.com/maaz404/Devinsight/actions](https://github.com/maaz404/Devinsight/actions)
+- **Deployments**: [https://github.com/maaz404/Devinsight/deployments](https://github.com/maaz404/Devinsight/deployments)
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
+1. **Fork the repository**
+2. **Create a feature branch**: `git checkout -b feature/amazing-feature`
+3. **Make your changes** in the `client/` or `server/` folders
+4. **Test locally**: `npm run dev:client` or `npm run dev:server`
+5. **Commit changes**: `git commit -m '✨ Add amazing feature'`
+6. **Push to branch**: `git push origin feature/amazing-feature`
+7. **Open a Pull Request**
+
+> 💡 **Tip**: Changes to `client/` will auto-deploy when merged to `main`!
+
+## 📝 Scripts Reference
+
+```bash
+# Development
+npm run dev:client          # Start React dev server
+npm run dev:server          # Start Node.js dev server  
+npm run dev:both           # Start both servers
+
+# Production
+npm run build              # Build React app
+npm run preview            # Preview production build
+npm run start             # Start production server
+
+# Dependencies
+npm run install:all        # Install all dependencies
+npm run install:client     # Install frontend deps only
+npm run install:server     # Install backend deps only
+```
+
+## 🔧 Environment Variables
+
+Create `.env` files in respective directories:
+
+```bash
+# client/.env
+VITE_API_URL=http://localhost:3000/api
+
+# server/.env
+MONGODB_URI=your_mongodb_connection_string
+GITHUB_TOKEN=your_github_token
+OPENAI_API_KEY=your_openai_api_key
+```
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 🙏 Acknowledgments
+## 👨‍💻 Author
 
-- OpenAI for providing the GPT-4 API
-- GitHub for the repository API
-- MongoDB for the database platform
-- The amazing open-source community
-
-## 📧 Contact
-
-**Email** - maazakbar404@gmail.com
-
-**Project Link:** https://github.com/maaz404/devinsight
+**Maaz Sheikh** - [@maaz404](https://github.com/maaz404)
 
 ---
 
-⭐ **Star this repository if you found it helpful!**
+<div align="center">
+
+**⭐ Star this repo if you found it helpful!**
+
+Made with ❤️ and automated with 🚀 GitHub Actions
+
+</div>
