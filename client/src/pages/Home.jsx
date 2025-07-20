@@ -1,82 +1,154 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import { Row, Col, Card, Typography, Button, Space, Divider } from 'antd';
+import { 
+  CodeOutlined, 
+  ThunderboltOutlined, 
+  TeamOutlined,
+  SearchOutlined,
+  GithubOutlined 
+} from '@ant-design/icons';
+
+const { Title, Paragraph } = Typography;
 
 const Home = () => {
   return (
-    <div className="container mx-auto px-4 py-8">
-      {/* Header */}
-      <header className="text-center mb-12">
-        <h1 className="text-4xl font-bold text-gray-900 mb-4">
-          DevInsight
-        </h1>
-        <p className="text-xl text-gray-600 mb-8">
-          AI-Powered GitHub Repository Analyzer
-        </p>
-        <div className="w-24 h-1 bg-primary-500 mx-auto"></div>
-      </header>
-
+    <div style={{ padding: '0 24px', background: '#f5f5f5', minHeight: '100vh' }}>
       {/* Hero Section */}
-      <section className="text-center mb-16">
-        <div className="max-w-3xl mx-auto">
-          <h2 className="text-3xl font-semibold text-gray-800 mb-6">
-            Unlock Insights from Your GitHub Repositories
-          </h2>
-          <p className="text-lg text-gray-600 mb-8">
-            Get comprehensive analysis of code quality, complexity, and development patterns 
-            using advanced AI algorithms. Perfect for developers, teams, and project managers.
-          </p>
-          <Link
-            to="/analyze"
-            className="inline-block bg-primary-500 hover:bg-primary-600 text-white font-semibold py-3 px-8 rounded-lg transition duration-300 transform hover:scale-105"
-          >
-            Start Analyzing
+      <div style={{ textAlign: 'center', padding: '60px 0' }}>
+        <Title level={1} style={{ fontSize: '48px', marginBottom: 16 }}>
+          <GithubOutlined style={{ marginRight: 16, color: '#1890ff' }} />
+          DevInsight
+        </Title>
+        <Title level={2} type="secondary" style={{ fontWeight: 400, marginBottom: 24 }}>
+          AI-Powered GitHub Repository Analyzer
+        </Title>
+        <Divider style={{ width: 100, margin: '0 auto 40px' }} />
+        
+        <div style={{ maxWidth: 800, margin: '0 auto' }}>
+          <Paragraph style={{ fontSize: '18px', marginBottom: 32 }}>
+            Unlock comprehensive insights from your GitHub repositories with advanced AI algorithms. 
+            Perfect for developers, teams, and project managers seeking to improve code quality and productivity.
+          </Paragraph>
+          
+          <Link to="/analyze">
+            <Button 
+              type="primary" 
+              size="large" 
+              icon={<SearchOutlined />}
+              style={{ height: 50, fontSize: '16px', paddingLeft: 32, paddingRight: 32 }}
+            >
+              Start Analyzing
+            </Button>
           </Link>
         </div>
-      </section>
+      </div>
 
       {/* Features Section */}
-      <section className="grid md:grid-cols-3 gap-8 mb-16">
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Code Quality Analysis</h3>
-          <p className="text-gray-600">
-            Comprehensive analysis of code quality metrics, best practices, and potential improvements.
-          </p>
-        </div>
+      <Row gutter={[24, 24]} style={{ marginBottom: 60 }}>
+        <Col xs={24} md={8}>
+          <Card 
+            hoverable
+            style={{ textAlign: 'center', height: '100%' }}
+            bodyStyle={{ padding: 32 }}
+          >
+            <div style={{ 
+              width: 64, 
+              height: 64, 
+              background: '#e6f7ff', 
+              borderRadius: '50%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              margin: '0 auto 16px'
+            }}>
+              <CodeOutlined style={{ fontSize: 32, color: '#1890ff' }} />
+            </div>
+            <Title level={4} style={{ marginBottom: 16 }}>Code Quality Analysis</Title>
+            <Paragraph type="secondary">
+              Comprehensive analysis of code quality metrics, best practices, and potential improvements 
+              using cutting-edge AI technology.
+            </Paragraph>
+          </Card>
+        </Col>
+        
+        <Col xs={24} md={8}>
+          <Card 
+            hoverable
+            style={{ textAlign: 'center', height: '100%' }}
+            bodyStyle={{ padding: 32 }}
+          >
+            <div style={{ 
+              width: 64, 
+              height: 64, 
+              background: '#fff7e6', 
+              borderRadius: '50%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              margin: '0 auto 16px'
+            }}>
+              <ThunderboltOutlined style={{ fontSize: 32, color: '#fa8c16' }} />
+            </div>
+            <Title level={4} style={{ marginBottom: 16 }}>Performance Insights</Title>
+            <Paragraph type="secondary">
+              Identify performance bottlenecks and get AI-powered suggestions for optimization 
+              to enhance your application's efficiency.
+            </Paragraph>
+          </Card>
+        </Col>
+        
+        <Col xs={24} md={8}>
+          <Card 
+            hoverable
+            style={{ textAlign: 'center', height: '100%' }}
+            bodyStyle={{ padding: 32 }}
+          >
+            <div style={{ 
+              width: 64, 
+              height: 64, 
+              background: '#f6ffed', 
+              borderRadius: '50%', 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center',
+              margin: '0 auto 16px'
+            }}>
+              <TeamOutlined style={{ fontSize: 32, color: '#52c41a' }} />
+            </div>
+            <Title level={4} style={{ marginBottom: 16 }}>Team Collaboration</Title>
+            <Paragraph type="secondary">
+              Analyze collaboration patterns, contribution metrics, and team productivity insights 
+              to improve development workflows.
+            </Paragraph>
+          </Card>
+        </Col>
+      </Row>
 
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Performance Insights</h3>
-          <p className="text-gray-600">
-            Identify performance bottlenecks and get AI-powered suggestions for optimization.
-          </p>
-        </div>
-
-        <div className="bg-white rounded-lg shadow-md p-6 text-center">
-          <div className="w-16 h-16 bg-primary-100 rounded-full flex items-center justify-center mx-auto mb-4">
-            <svg className="w-8 h-8 text-primary-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
-            </svg>
-          </div>
-          <h3 className="text-xl font-semibold text-gray-800 mb-3">Team Collaboration</h3>
-          <p className="text-gray-600">
-            Analyze collaboration patterns, contribution metrics, and team productivity insights.
-          </p>
-        </div>
-      </section>
+      {/* Call to Action */}
+      <Card style={{ textAlign: 'center', marginBottom: 40 }}>
+        <Title level={3} style={{ marginBottom: 16 }}>Ready to Analyze Your Repository?</Title>
+        <Paragraph style={{ fontSize: '16px', marginBottom: 24 }}>
+          Get detailed insights into your codebase with our AI-powered analysis engine.
+        </Paragraph>
+        <Space>
+          <Link to="/analyze">
+            <Button type="primary" size="large" icon={<SearchOutlined />}>
+              Analyze Now
+            </Button>
+          </Link>
+          <Button size="large" href="https://github.com/maaz404/Devinsight" target="_blank">
+            <GithubOutlined /> View on GitHub
+          </Button>
+        </Space>
+      </Card>
 
       {/* Footer */}
-      <footer className="text-center text-gray-500">
-        <p>&copy; 2025 DevInsight. Built with React, Node.js, and AI.</p>
-      </footer>
+      <div style={{ textAlign: 'center', padding: '20px 0', color: '#8c8c8c' }}>
+        <Paragraph type="secondary">
+          © 2025 DevInsight. Built with React, Node.js, and AI. Powered by Ant Design.
+        </Paragraph>
+      </div>
     </div>
   )
 }
