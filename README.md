@@ -13,7 +13,7 @@ DevInsight is a comprehensive full-stack application that analyzes GitHub reposi
 
 ### 🏠 Landing Page
 
-<!-- Add your landing page screenshot here -->
+<img width="944" height="470" alt="Screenshot 2025-07-20 211340" src="https://github.com/user-attachments/assets/1064bc24-8a6c-4cff-a11a-b959db690480" />
 
 ![DevInsight Landing Page](./screenshots/landing-page.png)
 
@@ -23,7 +23,7 @@ _Clean, modern landing page with clear value proposition and call-to-action_
 
 ### 🔍 Repository Analysis
 
-<!-- Add your analysis page screenshot here -->
+<img width="941" height="467" alt="Screenshot 2025-07-20 211616" src="https://github.com/user-attachments/assets/a43eab8f-9cd8-46bb-b3f7-5ad6ff7603e5" />
 
 ![Repository Analysis Interface](./screenshots/analysis-page.png)
 
@@ -33,7 +33,7 @@ _Intuitive interface for entering GitHub repository URLs and starting analysis_
 
 ### 📊 AI-Powered Dashboard
 
-<!-- Add your dashboard screenshot here -->
+<img width="955" height="465" alt="Screenshot 2025-07-20 211402" src="https://github.com/user-attachments/assets/40a70f8f-f7b6-483e-bb94-486cfa0e3415" />
 
 ![AI Analysis Dashboard](./screenshots/dashboard.png)
 
@@ -43,7 +43,7 @@ _Comprehensive dashboard showing code quality metrics, insights, and recommendat
 
 ### 📈 Detailed Reports
 
-<!-- Add your reports screenshot here -->
+<img width="938" height="468" alt="Screenshot 2025-07-20 211636" src="https://github.com/user-attachments/assets/9a00a56d-15a9-4d06-973b-649f5c682f69" />
 
 ![Detailed Analysis Reports](./screenshots/reports.png)
 
