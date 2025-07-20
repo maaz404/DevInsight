@@ -8,15 +8,29 @@ import {
   SearchOutlined,
   GithubOutlined 
 } from '@ant-design/icons';
+import { useTheme } from '../theme/ThemeProvider';
 
 const { Title, Paragraph } = Typography;
 
 const Home = () => {
+  const { isDarkMode } = useTheme();
+  
   return (
-    <div style={{ padding: '0 24px', background: '#f5f5f5', minHeight: '100vh' }}>
+    <div style={{ 
+      padding: '0 24px', 
+      background: isDarkMode ? '#000000' : '#f5f5f5', 
+      minHeight: '100vh' 
+    }}>
       {/* Hero Section */}
       <div style={{ textAlign: 'center', padding: '60px 0' }}>
-        <Title level={1} style={{ fontSize: '48px', marginBottom: 16 }}>
+        <Title 
+          level={1} 
+          style={{ 
+            fontSize: '48px', 
+            marginBottom: 16,
+            color: isDarkMode ? '#fff' : '#000'
+          }}
+        >
           <GithubOutlined style={{ marginRight: 16, color: '#1890ff' }} />
           DevInsight
         </Title>
@@ -55,7 +69,7 @@ const Home = () => {
             <div style={{ 
               width: 64, 
               height: 64, 
-              background: '#e6f7ff', 
+              background: isDarkMode ? 'rgba(24, 144, 255, 0.1)' : '#e6f7ff', 
               borderRadius: '50%', 
               display: 'flex', 
               alignItems: 'center', 
@@ -81,7 +95,7 @@ const Home = () => {
             <div style={{ 
               width: 64, 
               height: 64, 
-              background: '#fff7e6', 
+              background: isDarkMode ? 'rgba(250, 140, 22, 0.1)' : '#fff7e6', 
               borderRadius: '50%', 
               display: 'flex', 
               alignItems: 'center', 
@@ -107,7 +121,7 @@ const Home = () => {
             <div style={{ 
               width: 64, 
               height: 64, 
-              background: '#f6ffed', 
+              background: isDarkMode ? 'rgba(82, 196, 26, 0.1)' : '#f6ffed', 
               borderRadius: '50%', 
               display: 'flex', 
               alignItems: 'center', 
@@ -137,7 +151,7 @@ const Home = () => {
               Analyze Now
             </Button>
           </Link>
-          <Button size="large" href="https://github.com/maaz404/Devinsight" target="_blank">
+          <Button size="large" href="https://github.com/maaz404/DevInsight" target="_blank">
             <GithubOutlined /> View on GitHub
           </Button>
         </Space>

@@ -16,7 +16,14 @@ import {
   List,
   Divider,
   Space,
-  Badge
+  Badge,
+  Tooltip,
+  message,
+  Steps,
+  Result,
+  Skeleton,
+  Tabs,
+  Empty
 } from 'antd';
 import { 
   GithubOutlined, 
@@ -26,32 +33,67 @@ import {
   ExclamationCircleOutlined,
   TrophyOutlined,
   BugOutlined,
-  CodeOutlined
+  CodeOutlined,
+  FileTextOutlined,
+  BookOutlined,
+  ToolOutlined,
+  InfoCircleOutlined
 } from '@ant-design/icons';
+import { useTheme } from '../theme/ThemeProvider';
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
+const { Step } = Steps;
 
 const AnalyzeRepo = () => {
   const [form] = Form.useForm();
   const [loading, setLoading] = useState(false);
   const [results, setResults] = useState(null);
   const [error, setError] = useState('');
+  const [analysisStep, setAnalysisStep] = useState(0);
+  const { isDarkMode } = useTheme();
+
+  const analysisSteps = [
+    { title: 'Repository Access', description: 'Fetching repository data...' },
+    { title: 'Code Analysis', description: 'Analyzing code quality and structure...' },
+    { title: 'Documentation Check', description: 'Reviewing documentation quality...' },
+    { title: 'Generating Report', description: 'Compiling AI-powered insights...' }
+  ];
 
   const handleSubmit = async (values) => {
+    // Validate GitHub URL format more thoroughly
+    const githubUrlPattern = /^https:\/\/github\.com\/[\w\-\.]+\/[\w\-\.]+\/?$/;
+    if (!githubUrlPattern.test(values.repoUrl.trim())) {
+      message.error('Please enter a valid GitHub repository URL');
+      return;
+    }
+
     try {
       setLoading(true);
       setError('');
       setResults(null);
+      setAnalysisStep(0);
       
       console.log('Submitting analysis for:', values.repoUrl);
+      
+      // Simulate analysis steps progression
+      const stepInterval = setInterval(() => {
+        setAnalysisStep(prev => {
+          if (prev < 3) return prev + 1;
+          clearInterval(stepInterval);
+          return prev;
+        });
+      }, 1500);
       
       const response = await axios.post('/api/analyze', {
         repoUrl: values.repoUrl.trim()
       });
       
+      clearInterval(stepInterval);
+      setAnalysisStep(4);
       console.log('Analysis response:', response.data);
       setResults(response.data);
+      message.success('Repository analysis completed successfully!');
       
     } catch (error) {
       console.error('Analysis error:', error);
@@ -60,8 +102,10 @@ const AnalyzeRepo = () => {
                           error.response?.data?.message || 
                           'Failed to analyze repository. Please try again.';
       setError(errorMessage);
+      message.error(errorMessage);
     } finally {
       setLoading(false);
+      setAnalysisStep(0);
     }
   };
 
@@ -77,11 +121,21 @@ const AnalyzeRepo = () => {
     return 'exception';
   };
 
+  const detectLanguages = (repositoryInfo) => {
+    // Mock language detection - in real app this would come from API
+    const languages = ['JavaScript', 'React', 'Node.js', 'CSS'];
+    return languages;
+  };
+
   return (
-    <div style={{ padding: '24px', background: '#f5f5f5', minHeight: '100vh' }}>
+    <div style={{ 
+      padding: '24px', 
+      background: isDarkMode ? '#000000' : '#f5f5f5', 
+      minHeight: '100vh' 
+    }}>
       {/* Header */}
       <div style={{ textAlign: 'center', marginBottom: 32 }}>
-        <Title level={2}>
+        <Title level={2} style={{ color: isDarkMode ? '#fff' : '#000' }}>
           <GithubOutlined style={{ marginRight: 8, color: '#1890ff' }} />
           Analyze GitHub Repository
         </Title>
@@ -91,7 +145,14 @@ const AnalyzeRepo = () => {
       </div>
 
       {/* Input Form */}
-      <Card style={{ marginBottom: 24, maxWidth: 800, margin: '0 auto 24px' }}>
+      <Card 
+        style={{ 
+          marginBottom: 24, 
+          maxWidth: 800, 
+          margin: '0 auto 24px',
+          boxShadow: isDarkMode ? '0 4px 12px rgba(0,0,0,0.15)' : '0 4px 12px rgba(0,0,0,0.1)'
+        }}
+      >
         <Form
           form={form}
           layout="vertical"
@@ -99,20 +160,28 @@ const AnalyzeRepo = () => {
           size="large"
         >
           <Form.Item
-            label="GitHub Repository URL"
+            label={
+              <Space>
+                GitHub Repository URL
+                <Tooltip title="Enter the complete GitHub repository URL (e.g., https://github.com/facebook/react)">
+                  <InfoCircleOutlined style={{ color: '#1890ff' }} />
+                </Tooltip>
+              </Space>
+            }
             name="repoUrl"
             rules={[
               { required: true, message: 'Please enter a GitHub repository URL' },
               { 
-                pattern: /^https:\/\/github\.com\/[\w\-\.]+\/[\w\-\.]+$/,
-                message: 'Please enter a valid GitHub repository URL'
+                pattern: /^https:\/\/github\.com\/[\w\-\.]+\/[\w\-\.]+\/?$/,
+                message: 'Please enter a valid GitHub repository URL (https://github.com/owner/repo)'
               }
             ]}
           >
             <Input
-              prefix={<GithubOutlined />}
+              prefix={<GithubOutlined style={{ color: '#1890ff' }} />}
               placeholder="https://github.com/username/repository"
               onChange={() => setError('')}
+              style={{ fontSize: '16px' }}
             />
           </Form.Item>
           
@@ -123,7 +192,7 @@ const AnalyzeRepo = () => {
               loading={loading}
               icon={loading ? <LoadingOutlined /> : <SearchOutlined />}
               block
-              style={{ height: 48 }}
+              style={{ height: 48, fontSize: '16px' }}
             >
               {loading ? 'Analyzing Repository...' : 'Analyze Repository'}
             </Button>
@@ -132,19 +201,32 @@ const AnalyzeRepo = () => {
         
         <div style={{ textAlign: 'center', color: '#8c8c8c' }}>
           <Text type="secondary">
-            Enter the complete GitHub repository URL (e.g., https://github.com/facebook/react)
+            📊 Get comprehensive code quality insights, documentation analysis, and improvement suggestions
           </Text>
         </div>
       </Card>
 
-      {/* Loading State */}
+      {/* Loading State with Steps */}
       {loading && (
         <Card style={{ textAlign: 'center', marginBottom: 24 }}>
           <Spin size="large" />
-          <Title level={4} style={{ marginTop: 16, marginBottom: 8 }}>
+          <Title level={4} style={{ marginTop: 16, marginBottom: 24 }}>
             Analyzing Repository...
           </Title>
-          <Paragraph type="secondary">
+          <Steps 
+            current={analysisStep} 
+            size="small"
+            style={{ maxWidth: 600, margin: '0 auto' }}
+          >
+            {analysisSteps.map((step, index) => (
+              <Step 
+                key={index}
+                title={step.title} 
+                description={step.description}
+              />
+            ))}
+          </Steps>
+          <Paragraph type="secondary" style={{ marginTop: 16 }}>
             Our AI is examining your code. This may take a few moments.
           </Paragraph>
         </Card>
@@ -152,22 +234,35 @@ const AnalyzeRepo = () => {
 
       {/* Error State */}
       {error && (
-        <Alert
-          message="Analysis Failed"
-          description={error}
-          type="error"
-          showIcon
-          style={{ marginBottom: 24 }}
-          action={
+        <Result
+          status="error"
+          title="Analysis Failed"
+          subTitle={error}
+          extra={[
             <Button 
-              size="small" 
-              danger 
+              type="primary" 
+              key="retry"
               onClick={() => setError('')}
             >
-              Dismiss
+              Try Again
             </Button>
-          }
+          ]}
+          style={{ marginBottom: 24 }}
         />
+      )}
+
+      {/* Empty State */}
+      {!loading && !error && !results && (
+        <Card style={{ textAlign: 'center', marginBottom: 24 }}>
+          <Empty
+            image={Empty.PRESENTED_IMAGE_SIMPLE}
+            description={
+              <span>
+                Enter a GitHub repository URL above to get started with AI-powered analysis
+              </span>
+            }
+          />
+        </Card>
       )}
 
       {/* Results */}
@@ -182,8 +277,15 @@ const AnalyzeRepo = () => {
               </Space>
             }
             style={{ marginBottom: 24 }}
+            extra={
+              <Space>
+                {detectLanguages(results.repositoryInfo).map(lang => (
+                  <Tag key={lang} color="blue">{lang}</Tag>
+                ))}
+              </Space>
+            }
           >
-            <Row gutter={16}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={12} md={6}>
                 <Statistic 
                   title="Repository" 
@@ -247,121 +349,143 @@ const AnalyzeRepo = () => {
                 </div>
               </div>
 
-              {/* Code Quality */}
-              {results.aiAnalysis.codeQuality && (
-                <div style={{ marginBottom: 24 }}>
-                  <Title level={4}>
-                    <CodeOutlined style={{ marginRight: 8, color: '#1890ff' }} />
-                    Code Quality Assessment
-                  </Title>
-                  
-                  <Row gutter={16} style={{ marginBottom: 16 }}>
-                    <Col span={12}>
-                      <Progress
-                        percent={results.aiAnalysis.codeQuality.score || 0}
-                        strokeColor={getScoreColor(results.aiAnalysis.codeQuality.score || 0)}
-                        status={getScoreStatus(results.aiAnalysis.codeQuality.score || 0)}
-                      />
-                    </Col>
-                  </Row>
-                  
-                  {results.aiAnalysis.codeQuality.comments && results.aiAnalysis.codeQuality.comments.length > 0 && (
-                    <div style={{ marginBottom: 16 }}>
-                      <Title level={5}>💬 Comments</Title>
-                      <List
-                        size="small"
-                        dataSource={results.aiAnalysis.codeQuality.comments}
-                        renderItem={(item, index) => (
-                          <List.Item>
-                            <Text>{item}</Text>
-                          </List.Item>
+              {/* Tabbed Analysis Sections */}
+              <Tabs
+                defaultActiveKey="code"
+                items={[
+                  {
+                    key: 'code',
+                    label: (
+                      <Space>
+                        <CodeOutlined />
+                        Code Quality
+                      </Space>
+                    ),
+                    children: results.aiAnalysis.codeQuality ? (
+                      <div>
+                        <Row gutter={16} style={{ marginBottom: 16 }}>
+                          <Col span={12}>
+                            <Statistic
+                              title="Code Quality Score"
+                              value={results.aiAnalysis.codeQuality.score || 0}
+                              suffix="/ 100"
+                              valueStyle={{ color: getScoreColor(results.aiAnalysis.codeQuality.score || 0) }}
+                            />
+                          </Col>
+                          <Col span={12}>
+                            <Progress
+                              percent={results.aiAnalysis.codeQuality.score || 0}
+                              strokeColor={getScoreColor(results.aiAnalysis.codeQuality.score || 0)}
+                              status={getScoreStatus(results.aiAnalysis.codeQuality.score || 0)}
+                            />
+                          </Col>
+                        </Row>
+                        
+                        {results.aiAnalysis.codeQuality.strengths && results.aiAnalysis.codeQuality.strengths.length > 0 && (
+                          <div style={{ marginBottom: 16 }}>
+                            <Title level={5}>
+                              <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
+                              Strengths
+                            </Title>
+                            <List
+                              size="small"
+                              dataSource={results.aiAnalysis.codeQuality.strengths}
+                              renderItem={(item) => (
+                                <List.Item>
+                                  <Tag color="green">{item}</Tag>
+                                </List.Item>
+                              )}
+                            />
+                          </div>
                         )}
-                      />
-                    </div>
-                  )}
-                  
-                  {results.aiAnalysis.codeQuality.strengths && results.aiAnalysis.codeQuality.strengths.length > 0 && (
-                    <div style={{ marginBottom: 16 }}>
-                      <Title level={5}>
-                        <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                        Strengths
-                      </Title>
-                      <List
-                        size="small"
-                        dataSource={results.aiAnalysis.codeQuality.strengths}
-                        renderItem={(item, index) => (
-                          <List.Item>
-                            <Tag color="green">{item}</Tag>
-                          </List.Item>
+                        
+                        {results.aiAnalysis.codeQuality.improvements && results.aiAnalysis.codeQuality.improvements.length > 0 && (
+                          <div>
+                            <Title level={5}>
+                              <ExclamationCircleOutlined style={{ color: '#faad14', marginRight: 8 }} />
+                              Suggested Improvements
+                            </Title>
+                            <List
+                              size="small"
+                              dataSource={results.aiAnalysis.codeQuality.improvements}
+                              renderItem={(item) => (
+                                <List.Item>
+                                  <Tag color="orange">{item}</Tag>
+                                </List.Item>
+                              )}
+                            />
+                          </div>
                         )}
-                      />
-                    </div>
-                  )}
-                  
-                  {results.aiAnalysis.codeQuality.improvements && results.aiAnalysis.codeQuality.improvements.length > 0 && (
-                    <div style={{ marginBottom: 16 }}>
-                      <Title level={5}>
-                        <ExclamationCircleOutlined style={{ color: '#faad14', marginRight: 8 }} />
-                        Suggested Improvements
-                      </Title>
-                      <List
-                        size="small"
-                        dataSource={results.aiAnalysis.codeQuality.improvements}
-                        renderItem={(item, index) => (
-                          <List.Item>
-                            <Tag color="orange">{item}</Tag>
-                          </List.Item>
+                      </div>
+                    ) : (
+                      <Empty description="No code quality data available" />
+                    )
+                  },
+                  {
+                    key: 'docs',
+                    label: (
+                      <Space>
+                        <BookOutlined />
+                        Documentation
+                      </Space>
+                    ),
+                    children: results.aiAnalysis.readmeQuality ? (
+                      <div>
+                        <Row gutter={16} style={{ marginBottom: 16 }}>
+                          <Col span={12}>
+                            <Badge 
+                              status={results.aiAnalysis.readmeQuality.exists ? 'success' : 'error'}
+                              text={results.aiAnalysis.readmeQuality.exists ? 'README Found' : 'No README'}
+                            />
+                          </Col>
+                          {results.aiAnalysis.readmeQuality.score && (
+                            <Col span={12}>
+                              <Progress
+                                percent={results.aiAnalysis.readmeQuality.score}
+                                strokeColor={getScoreColor(results.aiAnalysis.readmeQuality.score)}
+                                status={getScoreStatus(results.aiAnalysis.readmeQuality.score)}
+                              />
+                            </Col>
+                          )}
+                        </Row>
+                        {results.aiAnalysis.readmeQuality.feedback && (
+                          <Alert
+                            message="Documentation Feedback"
+                            description={results.aiAnalysis.readmeQuality.feedback}
+                            type="info"
+                            showIcon
+                          />
                         )}
-                      />
-                    </div>
-                  )}
-                </div>
-              )}
-
-              {/* README Quality */}
-              {results.aiAnalysis.readmeQuality && (
-                <div style={{ marginBottom: 24 }}>
-                  <Title level={4}>📖 README Analysis</Title>
-                  <Row gutter={16} style={{ marginBottom: 16 }}>
-                    <Col span={12}>
-                      <Badge 
-                        status={results.aiAnalysis.readmeQuality.exists ? 'success' : 'error'}
-                        text={results.aiAnalysis.readmeQuality.exists ? 'README Found' : 'No README'}
-                      />
-                    </Col>
-                    {results.aiAnalysis.readmeQuality.score && (
-                      <Col span={12}>
-                        <Progress
-                          percent={results.aiAnalysis.readmeQuality.score}
-                          strokeColor={getScoreColor(results.aiAnalysis.readmeQuality.score)}
-                          status={getScoreStatus(results.aiAnalysis.readmeQuality.score)}
-                        />
-                      </Col>
-                    )}
-                  </Row>
-                  {results.aiAnalysis.readmeQuality.feedback && (
-                    <Alert
-                      message="README Feedback"
-                      description={results.aiAnalysis.readmeQuality.feedback}
-                      type="info"
-                      showIcon
-                    />
-                  )}
-                </div>
-              )}
-
-              {/* Overall Summary */}
-              {results.aiAnalysis.overallSummary && (
-                <div style={{ marginBottom: 24 }}>
-                  <Title level={4}>📋 Overall Summary</Title>
-                  <Alert
-                    message="Analysis Summary"
-                    description={results.aiAnalysis.overallSummary}
-                    type="info"
-                    showIcon
-                  />
-                </div>
-              )}
+                      </div>
+                    ) : (
+                      <Empty description="No documentation data available" />
+                    )
+                  },
+                  {
+                    key: 'practices',
+                    label: (
+                      <Space>
+                        <ToolOutlined />
+                        Best Practices
+                      </Space>
+                    ),
+                    children: (
+                      <div>
+                        {results.aiAnalysis.overallSummary ? (
+                          <Alert
+                            message="Best Practices Analysis"
+                            description={results.aiAnalysis.overallSummary}
+                            type="info"
+                            showIcon
+                          />
+                        ) : (
+                          <Empty description="No best practices data available" />
+                        )}
+                      </div>
+                    )
+                  }
+                ]}
+              />
             </Card>
           )}
 
@@ -370,7 +494,7 @@ const AnalyzeRepo = () => {
             title="Analysis Details"
             style={{ marginBottom: 24 }}
           >
-            <Row gutter={16}>
+            <Row gutter={[16, 16]}>
               <Col xs={24} sm={12} md={6}>
                 <Statistic 
                   title="Processing Time" 

@@ -5,12 +5,23 @@ import ReactDOM from 'react-dom/client';
 import { ConfigProvider } from 'antd';
 import App from './App.jsx';
 import './index.css';
-import antdTheme from './theme/antdTheme.js';
+import { ThemeProvider, useTheme } from './theme/ThemeProvider.jsx';
+
+// Wrapper component to access theme context
+function AppWithTheme() {
+  const { currentTheme } = useTheme();
+  
+  return (
+    <ConfigProvider theme={currentTheme}>
+      <App />
+    </ConfigProvider>
+  );
+}
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <ConfigProvider theme={antdTheme}>
-      <App />
-    </ConfigProvider>
+    <ThemeProvider>
+      <AppWithTheme />
+    </ThemeProvider>
   </React.StrictMode>,
 )
