@@ -3,6 +3,33 @@ import { lightTheme, darkTheme } from './antdTheme';
 
 const ThemeContext = createContext();
 
+export const ThemeProvider = ({ children }) => {
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const saved = localStorage.getItem('isDarkMode');
+    return saved ? JSON.parse(saved) : false;
+  });
+
+  useEffect(() => {
+    localStorage.setItem('isDarkMode', JSON.stringify(isDarkMode));
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode(prev => !prev);
+  };
+
+  const currentTheme = isDarkMode ? darkTheme : lightTheme;
+
+  return (
+    <ThemeContext.Provider value={{
+      isDarkMode,
+      toggleTheme,
+      currentTheme
+    }}>
+      {children}
+    </ThemeContext.Provider>
+  );
+};
+
 export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
@@ -10,40 +37,3 @@ export const useTheme = () => {
   }
   return context;
 };
-
-export const ThemeProvider = ({ children }) => {
-  const [isDarkMode, setIsDarkMode] = useState(() => {
-    // Get theme from localStorage or default to light mode
-    const savedTheme = localStorage.getItem('devinsight-theme');
-    return savedTheme === 'dark';
-  });
-
-  const toggleTheme = () => {
-    setIsDarkMode(prev => {
-      const newMode = !prev;
-      localStorage.setItem('devinsight-theme', newMode ? 'dark' : 'light');
-      return newMode;
-    });
-  };
-
-  const currentTheme = isDarkMode ? darkTheme : lightTheme;
-
-  useEffect(() => {
-    // Save theme preference to localStorage whenever it changes
-    localStorage.setItem('devinsight-theme', isDarkMode ? 'dark' : 'light');
-  }, [isDarkMode]);
-
-  const value = {
-    isDarkMode,
-    toggleTheme,
-    currentTheme,
-  };
-
-  return (
-    <ThemeContext.Provider value={value}>
-      {children}
-    </ThemeContext.Provider>
-  );
-};
-
-export default ThemeProvider;

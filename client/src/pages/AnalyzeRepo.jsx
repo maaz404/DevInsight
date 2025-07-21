@@ -23,7 +23,8 @@ import {
   Result,
   Skeleton,
   Tabs,
-  Empty
+  Empty,
+  Grid
 } from 'antd';
 import { 
   GithubOutlined, 
@@ -52,6 +53,9 @@ const AnalyzeRepo = () => {
   const [error, setError] = useState('');
   const [analysisStep, setAnalysisStep] = useState(0);
   const { isDarkMode } = useTheme();
+  const breakpoint = Grid.useBreakpoint();
+  const isMobile = !breakpoint.md;
+  const isTablet = breakpoint.md && !breakpoint.lg;
 
   const analysisSteps = [
     { title: 'Repository Access', description: 'Fetching repository data...' },
@@ -60,12 +64,12 @@ const AnalyzeRepo = () => {
     { title: 'Generating Report', description: 'Compiling AI-powered insights...' }
   ];
 
-  // Enhanced conditional styling helper function with improved visual structure
+  // Enhanced conditional styling helper function with modern bluish-gray palette
   const getContainerStyle = (additionalStyles = {}) => ({
-    border: isDarkMode ? 'none' : '1px solid #C9CED6', // Visible borders for structure
-    boxShadow: isDarkMode ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04)', // Enhanced shadows
+    border: isDarkMode ? 'none' : '1px solid #bcc3ce', // Structured borders with bluish tone
+    boxShadow: isDarkMode ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04)', // Soft shadows
     transition: 'all 0.3s ease',
-    background: isDarkMode ? '#1F1F1F' : '#FAFAFA', // Raised container background
+    background: isDarkMode ? '#1F1F1F' : '#f4f6f8', // Card/panel background
     ...additionalStyles
   });
 
@@ -139,7 +143,7 @@ const AnalyzeRepo = () => {
   return (
     <div style={{ 
       padding: '24px', 
-      background: isDarkMode ? '#141414' : '#EEF1F5', // Darker muted base background
+      background: isDarkMode ? '#141414' : '#e8eaed', // Main bluish-gray background
       minHeight: '100vh',
       transition: 'background-color 0.3s ease'
     }}>

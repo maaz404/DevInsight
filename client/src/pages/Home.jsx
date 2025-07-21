@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Row, Col, Card, Typography, Button, Space, Divider } from 'antd';
+import { Row, Col, Card, Typography, Button, Space, Divider, Grid } from 'antd';
 import { 
   CodeOutlined, 
   ThunderboltOutlined, 
@@ -14,50 +14,53 @@ const { Title, Paragraph } = Typography;
 
 const Home = () => {
   const { isDarkMode } = useTheme();
+  const breakpoint = Grid.useBreakpoint();
+  const isMobile = !breakpoint.md;
+  const isTablet = breakpoint.md && !breakpoint.lg;
   
-  // Enhanced conditional styling helper function with improved visual structure
+  // Enhanced conditional styling helper function with modern bluish-gray palette
   const getContainerStyle = (additionalStyles = {}) => ({
-    border: isDarkMode ? 'none' : '1px solid #C9CED6', // Visible borders for structure
-    boxShadow: isDarkMode ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.06), 0 4px 16px rgba(0, 0, 0, 0.04)', // Enhanced shadows
+    border: isDarkMode ? 'none' : '1px solid #bcc3ce', // Structured borders with bluish tone
+    boxShadow: isDarkMode ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04)', // Soft shadows
     transition: 'all 0.3s ease',
-    background: isDarkMode ? '#1F1F1F' : '#FAFAFA', // Raised container background
+    background: isDarkMode ? '#1F1F1F' : '#f4f6f8', // Card/panel background
     ...additionalStyles
   });
   
   return (
     <div style={{ 
-      padding: '0 24px', 
-      background: isDarkMode ? '#141414' : '#EEF1F5', // Darker muted base background
+      padding: isMobile ? '0 12px' : '0 24px', 
+      background: isDarkMode ? '#141414' : '#e8eaed', // Main bluish-gray background
       minHeight: '100vh',
       transition: 'background-color 0.3s ease'
     }}>
       {/* Hero Section */}
       <div style={{ 
         textAlign: 'center', 
-        padding: '60px 0',
+        padding: isMobile ? '40px 16px' : '60px 24px',
         ...getContainerStyle({
           margin: '0 auto 40px',
           maxWidth: '1200px',
           borderRadius: '8px',
-          marginTop: '24px'
+          marginTop: isMobile ? '12px' : '24px'
         })
       }}>
         <Title 
-          level={1} 
+          level={isMobile ? 2 : 1} 
           style={{ 
-            fontSize: '48px', 
-            marginBottom: 16,
-            color: isDarkMode ? '#FFFFFFD9' : '#1C1C1C', // Enhanced text contrast
+            fontSize: isMobile ? '28px' : isTablet ? '36px' : '48px', 
+            marginBottom: isMobile ? 12 : 16,
+            color: isDarkMode ? '#FFFFFFD9' : '#1e1e1e', // Enhanced bluish-gray text
             transition: 'color 0.3s ease'
           }}
         >
-          <GithubOutlined style={{ marginRight: 16, color: isDarkMode ? '#4096FF' : '#1677FF' }} />
+          <GithubOutlined style={{ marginRight: 16, color: isDarkMode ? '#4096FF' : '#3a6ea5' }} />
           DevInsight
         </Title>
         <Title level={2} style={{ 
           fontWeight: 400, 
           marginBottom: 24,
-          color: isDarkMode ? '#FFFFFFA6' : '#5A5A5A' // Improved secondary text contrast
+          color: isDarkMode ? '#FFFFFFA6' : '#5f6368' // Muted bluish-gray text
         }}>
           AI-Powered GitHub Repository Analyzer
         </Title>
@@ -65,9 +68,9 @@ const Home = () => {
         
         <div style={{ maxWidth: 800, margin: '0 auto' }}>
           <Paragraph style={{ 
-            fontSize: '18px', 
-            marginBottom: 32,
-            color: isDarkMode ? '#FFFFFFA6' : '#5A5A5A' // Consistent secondary text
+            fontSize: isMobile ? '16px' : '18px', 
+            marginBottom: isMobile ? 24 : 32,
+            color: isDarkMode ? '#FFFFFFA6' : '#5f6368' // Consistent muted text
           }}>
             Unlock comprehensive insights from your GitHub repositories with advanced AI algorithms. 
             Perfect for developers, teams, and project managers seeking to improve code quality and productivity.
@@ -76,9 +79,15 @@ const Home = () => {
           <Link to="/analyze">
             <Button 
               type="primary" 
-              size="large" 
+              size={isMobile ? "middle" : "large"}
               icon={<SearchOutlined />}
-              style={{ height: 50, fontSize: '16px', paddingLeft: 32, paddingRight: 32 }}
+              style={{ 
+                height: isMobile ? 40 : 50, 
+                fontSize: isMobile ? '14px' : '16px', 
+                paddingLeft: isMobile ? 20 : 32, 
+                paddingRight: isMobile ? 20 : 32,
+                width: isMobile ? '100%' : 'auto'
+              }}
             >
               Start Analyzing
             </Button>
@@ -87,8 +96,8 @@ const Home = () => {
       </div>
 
       {/* Features Section */}
-      <Row gutter={[24, 24]} style={{ marginBottom: 60 }}>
-        <Col xs={24} md={8}>
+      <Row gutter={[isMobile ? 16 : 24, isMobile ? 16 : 24]} style={{ marginBottom: isMobile ? 40 : 60 }}>
+        <Col xs={24} sm={24} md={8}>
           <Card 
             hoverable
             style={{ 
@@ -96,11 +105,11 @@ const Home = () => {
               height: '100%',
               ...getContainerStyle()
             }}
-            bodyStyle={{ padding: 32 }}
+            bodyStyle={{ padding: isMobile ? 20 : 32 }}
           >
             <div style={{ 
-              width: 64, 
-              height: 64, 
+              width: isMobile ? 48 : 64, 
+              height: isMobile ? 48 : 64, 
               background: isDarkMode ? 'rgba(64, 150, 255, 0.1)' : '#E6F4FF', 
               borderRadius: '50%', 
               display: 'flex', 
@@ -109,9 +118,9 @@ const Home = () => {
               margin: '0 auto 16px',
               transition: 'background-color 0.3s ease'
             }}>
-              <CodeOutlined style={{ fontSize: 32, color: isDarkMode ? '#4096FF' : '#1677FF' }} />
+              <CodeOutlined style={{ fontSize: isMobile ? 24 : 32, color: isDarkMode ? '#4096FF' : '#1677FF' }} />
             </div>
-            <Title level={4} style={{ marginBottom: 16 }}>Code Quality Analysis</Title>
+            <Title level={isMobile ? 5 : 4} style={{ marginBottom: 16 }}>Code Quality Analysis</Title>
             <Paragraph style={{ 
               color: isDarkMode ? '#FFFFFFA6' : '#000000A6'
             }}>
@@ -121,7 +130,7 @@ const Home = () => {
           </Card>
         </Col>
         
-        <Col xs={24} md={8}>
+        <Col xs={24} sm={24} md={8}>
           <Card 
             hoverable
             style={{ 
@@ -129,11 +138,11 @@ const Home = () => {
               height: '100%',
               ...getContainerStyle()
             }}
-            bodyStyle={{ padding: 32 }}
+            bodyStyle={{ padding: isMobile ? 20 : 32 }}
           >
             <div style={{ 
-              width: 64, 
-              height: 64, 
+              width: isMobile ? 48 : 64, 
+              height: isMobile ? 48 : 64, 
               background: isDarkMode ? 'rgba(250, 140, 22, 0.1)' : '#fff7e6', 
               borderRadius: '50%', 
               display: 'flex', 
@@ -142,9 +151,9 @@ const Home = () => {
               margin: '0 auto 16px',
               transition: 'background-color 0.3s ease'
             }}>
-              <ThunderboltOutlined style={{ fontSize: 32, color: '#fa8c16' }} />
+              <ThunderboltOutlined style={{ fontSize: isMobile ? 24 : 32, color: '#fa8c16' }} />
             </div>
-            <Title level={4} style={{ marginBottom: 16 }}>Performance Insights</Title>
+            <Title level={isMobile ? 5 : 4} style={{ marginBottom: 16 }}>Performance Insights</Title>
             <Paragraph style={{ 
               color: isDarkMode ? '#FFFFFFA6' : '#000000A6'
             }}>
@@ -154,19 +163,19 @@ const Home = () => {
           </Card>
         </Col>
         
-        <Col xs={24} md={8}>
+        <Col xs={24} sm={24} md={8}>
           <Card 
             hoverable
             style={{ 
-              textAlign: 'center', 
+              textAlign: 'center',
               height: '100%',
               ...getContainerStyle()
             }}
-            bodyStyle={{ padding: 32 }}
+            bodyStyle={{ padding: isMobile ? 20 : 32 }}
           >
             <div style={{ 
-              width: 64, 
-              height: 64, 
+              width: isMobile ? 48 : 64, 
+              height: isMobile ? 48 : 64, 
               background: isDarkMode ? 'rgba(82, 196, 26, 0.1)' : '#f6ffed', 
               borderRadius: '50%', 
               display: 'flex', 
@@ -175,9 +184,9 @@ const Home = () => {
               margin: '0 auto 16px',
               transition: 'background-color 0.3s ease'
             }}>
-              <TeamOutlined style={{ fontSize: 32, color: '#52c41a' }} />
+              <TeamOutlined style={{ fontSize: isMobile ? 24 : 32, color: '#52c41a' }} />
             </div>
-            <Title level={4} style={{ marginBottom: 16 }}>Team Collaboration</Title>
+            <Title level={isMobile ? 5 : 4} style={{ marginBottom: 16 }}>Team Collaboration</Title>
             <Paragraph style={{ 
               color: isDarkMode ? '#FFFFFFA6' : '#000000A6'
             }}>
