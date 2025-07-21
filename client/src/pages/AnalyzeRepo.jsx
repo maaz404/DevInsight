@@ -38,9 +38,14 @@ import {
   FileTextOutlined,
   BookOutlined,
   ToolOutlined,
-  InfoCircleOutlined
+  InfoCircleOutlined,
+  GitlabOutlined
 } from '@ant-design/icons';
 import { useTheme } from '../theme/ThemeProvider';
+import ReadmeAnalyzer from '../features/readme-analyzer/ReadmeAnalyzer';
+import DependencyAnalyzer from '../features/dependency-analyzer/DependencyAnalyzer';
+import CodeSmellScanner from '../features/code-smell-scanner/CodeSmellScanner';
+import GitHubApiAnalyzer from '../features/github-api-analyzer/GitHubApiAnalyzer';
 
 const { Title, Paragraph, Text } = Typography;
 const { TextArea } = Input;
@@ -474,39 +479,59 @@ const AnalyzeRepo = () => {
                     label: (
                       <Space>
                         <BookOutlined />
-                        Documentation
+                        README Analysis
                       </Space>
                     ),
-                    children: results.aiAnalysis.readmeQuality ? (
-                      <div>
-                        <Row gutter={16} style={{ marginBottom: 16 }}>
-                          <Col span={12}>
-                            <Badge 
-                              status={results.aiAnalysis.readmeQuality.exists ? 'success' : 'error'}
-                              text={results.aiAnalysis.readmeQuality.exists ? 'README Found' : 'No README'}
-                            />
-                          </Col>
-                          {results.aiAnalysis.readmeQuality.score && (
-                            <Col span={12}>
-                              <Progress
-                                percent={results.aiAnalysis.readmeQuality.score}
-                                strokeColor={getScoreColor(results.aiAnalysis.readmeQuality.score)}
-                                status={getScoreStatus(results.aiAnalysis.readmeQuality.score)}
-                              />
-                            </Col>
-                          )}
-                        </Row>
-                        {results.aiAnalysis.readmeQuality.feedback && (
-                          <Alert
-                            message="Documentation Feedback"
-                            description={results.aiAnalysis.readmeQuality.feedback}
-                            type="info"
-                            showIcon
-                          />
-                        )}
-                      </div>
-                    ) : (
-                      <Empty description="No documentation data available" />
+                    children: (
+                      <ReadmeAnalyzer 
+                        analysis={results.aiAnalysis.features?.readmeAnalysis || results.aiAnalysis.readmeQuality}
+                        loading={false}
+                      />
+                    )
+                  },
+                  {
+                    key: 'dependencies',
+                    label: (
+                      <Space>
+                        <CodeOutlined />
+                        Dependencies
+                      </Space>
+                    ),
+                    children: (
+                      <DependencyAnalyzer 
+                        analysis={results.aiAnalysis.features?.dependencyAnalysis || results.aiAnalysis.dependencyHealth}
+                        loading={false}
+                      />
+                    )
+                  },
+                  {
+                    key: 'code-quality',
+                    label: (
+                      <Space>
+                        <BugOutlined />
+                        Code Quality
+                      </Space>
+                    ),
+                    children: (
+                      <CodeSmellScanner 
+                        analysis={results.aiAnalysis.features?.codeSmellAnalysis || results.aiAnalysis.codeQuality}
+                        loading={false}
+                      />
+                    )
+                  },
+                  {
+                    key: 'github-api',
+                    label: (
+                      <Space>
+                        <GitlabOutlined />
+                        GitHub Metrics
+                      </Space>
+                    ),
+                    children: (
+                      <GitHubApiAnalyzer 
+                        analysis={results.aiAnalysis.features?.githubApiAnalysis}
+                        loading={false}
+                      />
                     )
                   },
                   {

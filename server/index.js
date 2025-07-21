@@ -54,6 +54,19 @@ connectDB();
 // Routes
 app.use("/api/analyze", require("./routes/analyze"));
 app.use("/api/projects", require("./routes/projects"));
+app.use("/api/analyze/readme", require("./features/readme-analyzer/routes"));
+app.use(
+  "/api/analyze/dependencies",
+  require("./features/dependency-analyzer/routes")
+);
+app.use(
+  "/api/analyze/code-smells",
+  require("./features/code-smell-scanner/routes")
+);
+app.use(
+  "/api/analyze/github",
+  require("./features/github-api-analyzer/routes")
+);
 
 // Basic route
 app.get("/", (req, res) => {
