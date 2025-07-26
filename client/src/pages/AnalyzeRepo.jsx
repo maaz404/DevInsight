@@ -1,608 +1,746 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
 import axios from 'axios';
-import { 
-  Card, 
-  Form, 
-  Input, 
-  Button, 
-  Alert, 
-  Spin, 
-  Typography, 
-  Row, 
-  Col,
-  Statistic,
-  Tag,
-  Progress,
-  List,
-  Divider,
-  Space,
-  Badge,
-  Tooltip,
-  message,
-  Steps,
-  Result,
-  Skeleton,
-  Tabs,
-  Empty,
-  Grid
-} from 'antd';
-import { 
-  GithubOutlined, 
-  SearchOutlined, 
-  LoadingOutlined,
-  CheckCircleOutlined,
-  ExclamationCircleOutlined,
-  TrophyOutlined,
-  BugOutlined,
-  CodeOutlined,
-  FileTextOutlined,
-  BookOutlined,
-  ToolOutlined,
-  InfoCircleOutlined,
-  GitlabOutlined
-} from '@ant-design/icons';
-import { useTheme } from '../theme/ThemeProvider';
-import ReadmeAnalyzer from '../features/readme-analyzer/ReadmeAnalyzer';
-import DependencyAnalyzer from '../features/dependency-analyzer/DependencyAnalyzer';
-import CodeSmellScanner from '../features/code-smell-scanner/CodeSmellScanner';
-import GitHubApiAnalyzer from '../features/github-api-analyzer/GitHubApiAnalyzer';
-
-const { Title, Paragraph, Text } = Typography;
-const { TextArea } = Input;
-const { Step } = Steps;
+import CTAButton from '../components/CTAButton';
+import ResultBox from '../components/ResultBox';
+import BadgePill from '../components/BadgePill';
+import NeoBrutalistCard from '../components/NeoBrutalistCard';
 
 const AnalyzeRepo = () => {
-  const [form] = Form.useForm();
+  const location = useLocation();
+  const [repoUrl, setRepoUrl] = useState(location.state?.repoUrl || '');
   const [loading, setLoading] = useState(false);
-  const [results, setResults] = useState(null);
-  const [error, setError] = useState('');
-  const [analysisStep, setAnalysisStep] = useState(0);
-  const { isDarkMode } = useTheme();
-  const breakpoint = Grid.useBreakpoint();
-  const isMobile = !breakpoint.md;
-  const isTablet = breakpoint.md && !breakpoint.lg;
+  const [analysisResult, setAnalysisResult] = useState(null);
+  const [error, setError] = useState(null);
+  const [progress, setProgress] = useState(0);
+  const [currentStep, setCurrentStep] = useState('');
 
-  const analysisSteps = [
-    { title: 'Repository Access', description: 'Fetching repository data...' },
-    { title: 'Code Analysis', description: 'Analyzing code quality and structure...' },
-    { title: 'Documentation Check', description: 'Reviewing documentation quality...' },
-    { title: 'Generating Report', description: 'Compiling AI-powered insights...' }
-  ];
-
-  // Enhanced conditional styling helper function with modern bluish-gray palette
-  const getContainerStyle = (additionalStyles = {}) => ({
-    border: isDarkMode ? 'none' : '1px solid #bcc3ce', // Structured borders with bluish tone
-    boxShadow: isDarkMode ? 'none' : '0 2px 8px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04)', // Soft shadows
-    transition: 'all 0.3s ease',
-    background: isDarkMode ? '#1F1F1F' : '#f4f6f8', // Card/panel background
-    ...additionalStyles
-  });
-
-  const handleSubmit = async (values) => {
-    // Validate GitHub URL format more thoroughly
-    const githubUrlPattern = /^https:\/\/github\.com\/[\w\-\.]+\/[\w\-\.]+\/?$/;
-    if (!githubUrlPattern.test(values.repoUrl.trim())) {
-      message.error('Please enter a valid GitHub repository URL');
-      return;
+  useEffect(() => {
+    if (location.state?.repoUrl) {
+      handleAnalyze();
     }
+  }, []);
+
+  const simulateProgress = () => {
+    const steps = [
+      { step: 'Validating repository URL...', progress: 10 },
+      { step: 'Analyzing README documentation...', progress: 25 },
+      { step: 'Checking dependencies...', progress: 45 },
+      { step: 'Scanning code quality...', progress: 65 },
+      { step: 'Fetching GitHub metrics...', progress: 85 },
+      { step: 'Generating insights...', progress: 95 },
+      { step: 'Analysis complete!', progress: 100 }
+    ];
+
+    let currentIndex = 0;
+    const interval = setInterval(() => {
+      if (currentIndex < steps.length) {
+        setCurrentStep(steps[currentIndex].step);
+        setProgress(steps[currentIndex].progress);
+        currentIndex++;
+      } else {
+        clearInterval(interval);
+      }
+    }, 800);
+
+    return interval;
+  };
+
+  const handleAnalyze = async () => {
+    if (!repoUrl.trim()) return;
+
+    setLoading(true);
+    setError(null);
+    setAnalysisResult(null);
+    setProgress(0);
+    setCurrentStep('Starting analysis...');
+
+    const progressInterval = simulateProgress();
 
     try {
-      setLoading(true);
-      setError('');
-      setResults(null);
-      setAnalysisStep(0);
-      
-      console.log('Submitting analysis for:', values.repoUrl);
-      
-      // Simulate analysis steps progression
-      const stepInterval = setInterval(() => {
-        setAnalysisStep(prev => {
-          if (prev < 3) return prev + 1;
-          clearInterval(stepInterval);
-          return prev;
-        });
-      }, 1500);
-      
-      const response = await axios.post('/api/analyze', {
-        repoUrl: values.repoUrl.trim()
+      const response = await axios.post('http://localhost:5000/api/analyze', {
+        repoUrl: repoUrl.trim()
       });
+
+      console.log('Analysis response received:', response.data);
       
-      clearInterval(stepInterval);
-      setAnalysisStep(4);
-      console.log('Analysis response:', response.data);
-      setResults(response.data);
-      message.success('Repository analysis completed successfully!');
-      
-    } catch (error) {
-      console.error('Analysis error:', error);
-      
-      const errorMessage = error.response?.data?.error || 
-                          error.response?.data?.message || 
-                          'Failed to analyze repository. Please try again.';
-      setError(errorMessage);
-      message.error(errorMessage);
-    } finally {
+      // Transform the new backend structure to match frontend expectations
+      const transformedData = {
+        success: response.data.success,
+        overallScore: response.data.data?.scores?.overall || 0,
+        readmeScore: response.data.data?.scores?.breakdown?.readme || 0,
+        dependencyScore: response.data.data?.scores?.breakdown?.dependencies || 0,
+        codeQualityScore: response.data.data?.scores?.breakdown?.codeQuality || 0,
+        githubScore: response.data.data?.scores?.breakdown?.github || 0,
+        
+        // Pass through additional data that might be useful
+        repositoryInfo: response.data.data?.repositoryInfo,
+        metadata: response.data.data?.metadata,
+        recommendations: response.data.data?.recommendations,
+        analysis: response.data.data?.analysis,
+        
+        // Create score breakdown for the detailed view
+        scoreBreakdown: {
+          readmeWeight: Math.round((response.data.data?.scores?.weights?.readme || 0.25) * 100),
+          dependencyWeight: Math.round((response.data.data?.scores?.weights?.dependencies || 0.25) * 100),
+          codeQualityWeight: Math.round((response.data.data?.scores?.weights?.codeQuality || 0.30) * 100),
+          githubWeight: Math.round((response.data.data?.scores?.weights?.github || 0.20) * 100)
+        }
+      };
+
+      console.log('Transformed scores:', {
+        overall: transformedData.overallScore,
+        readme: transformedData.readmeScore,
+        dependency: transformedData.dependencyScore,
+        codeQuality: transformedData.codeQualityScore,
+        github: transformedData.githubScore
+      });
+
+      setTimeout(() => {
+        setAnalysisResult(transformedData);
+        setLoading(false);
+        clearInterval(progressInterval);
+      }, 6000);
+
+    } catch (err) {
+      clearInterval(progressInterval);
       setLoading(false);
-      setAnalysisStep(0);
+      setError(err.response?.data?.error || 'Failed to analyze repository. Please try again.');
+      console.error('Analysis error:', err);
     }
+  };
+
+  const handleUrlChange = (e) => {
+    setRepoUrl(e.target.value);
+    if (error) setError(null);
   };
 
   const getScoreColor = (score) => {
-    if (score >= 80) return '#52c41a'; // green
-    if (score >= 60) return '#faad14'; // orange
-    return '#ff4d4f'; // red
+    if (score >= 80) return 'neo-green';
+    if (score >= 60) return 'neo-blue';
+    if (score >= 40) return 'yellow';
+    return 'neo-pink';
   };
 
-  const getScoreStatus = (score) => {
-    if (score >= 80) return 'success';
-    if (score >= 60) return 'active';
-    return 'exception';
-  };
-
-  const detectLanguages = (repositoryInfo) => {
-    // Mock language detection - in real app this would come from API
-    const languages = ['JavaScript', 'React', 'Node.js', 'CSS'];
-    return languages;
+  const getScoreEmoji = (score) => {
+    if (score >= 80) return '🎉';
+    if (score >= 60) return '👍';
+    if (score >= 40) return '⚠️';
+    return '🔧';
   };
 
   return (
-    <div style={{ 
-      padding: '24px', 
-      background: isDarkMode ? '#141414' : '#e8eaed', // Main bluish-gray background
-      minHeight: '100vh',
-      transition: 'background-color 0.3s ease'
-    }}>
-      {/* Header */}
-      <div style={{ 
-        textAlign: 'center', 
-        marginBottom: 32,
-        ...getContainerStyle({
-          padding: '32px',
-          borderRadius: '8px'
-        })
-      }}>
-        <Title level={2} style={{ 
-          color: isDarkMode ? '#FFFFFFD9' : '#1f1f1f', // Deep charcoal for softer appearance
-          transition: 'color 0.3s ease'
-        }}>
-          <GithubOutlined style={{ 
-            marginRight: 8, 
-            color: isDarkMode ? '#4096FF' : '#1677FF' 
-          }} />
-          Analyze GitHub Repository
-        </Title>
-        <Paragraph style={{ 
-          fontSize: '16px',
-          color: isDarkMode ? '#FFFFFFA6' : '#000000A6',
-          margin: 0
-        }}>
-          Get AI-powered insights into code quality, structure, and best practices
-        </Paragraph>
-      </div>
-
-      {/* Input Form */}
-      <Card 
-        style={{ 
-          marginBottom: 24, 
-          maxWidth: 800, 
-          margin: '0 auto 24px',
-          ...getContainerStyle({
-            boxShadow: isDarkMode ? 'none' : '0 4px 12px rgba(0,0,0,0.1)'
-          })
-        }}
-      >
-        <Form
-          form={form}
-          layout="vertical"
-          onFinish={handleSubmit}
-          size="large"
-        >
-          <Form.Item
-            label={
-              <Space>
-                GitHub Repository URL
-                <Tooltip title="Enter the complete GitHub repository URL (e.g., https://github.com/facebook/react)">
-                  <InfoCircleOutlined style={{ color: '#1890ff' }} />
-                </Tooltip>
-              </Space>
-            }
-            name="repoUrl"
-            rules={[
-              { required: true, message: 'Please enter a GitHub repository URL' },
-              { 
-                pattern: /^https:\/\/github\.com\/[\w\-\.]+\/[\w\-\.]+\/?$/,
-                message: 'Please enter a valid GitHub repository URL (https://github.com/owner/repo)'
-              }
-            ]}
-          >
-            <Input
-              prefix={<GithubOutlined style={{ color: '#1890ff' }} />}
-              placeholder="https://github.com/username/repository"
-              onChange={() => setError('')}
-              style={{ fontSize: '16px' }}
-            />
-          </Form.Item>
-          
-          <Form.Item>
-            <Button
-              type="primary"
-              htmlType="submit"
-              loading={loading}
-              icon={loading ? <LoadingOutlined /> : <SearchOutlined />}
-              block
-              style={{ height: 48, fontSize: '16px' }}
-            >
-              {loading ? 'Analyzing Repository...' : 'Analyze Repository'}
-            </Button>
-          </Form.Item>
-        </Form>
-        
-        <div style={{ textAlign: 'center', color: isDarkMode ? '#FFFFFF73' : '#00000073' }}>
-          <Text style={{ color: isDarkMode ? '#FFFFFF73' : '#00000073' }}>
-            📊 Get comprehensive code quality insights, documentation analysis, and improvement suggestions
-          </Text>
+    <div className="min-h-screen bg-pastel-yellow p-4 md:p-8">
+      <div className="max-w-6xl mx-auto">
+        {/* Header */}
+        <div className="text-center mb-8">
+          <h1 className="font-display font-black text-4xl md:text-6xl text-black mb-4 transform -rotate-1">
+            Repository Analyzer 🔍
+          </h1>
+          <p className="text-lg text-black/70 max-w-2xl mx-auto">
+            Get AI-powered insights about your GitHub repository's health, documentation, and code quality
+          </p>
         </div>
-      </Card>
 
-      {/* Loading State with Steps */}
-      {loading && (
-        <Card style={{ 
-          textAlign: 'center', 
-          marginBottom: 24,
-          ...getContainerStyle()
-        }}>
-          <Spin size="large" />
-          <Title level={4} style={{ marginTop: 16, marginBottom: 24 }}>
-            Analyzing Repository...
-          </Title>
-          <Steps 
-            current={analysisStep} 
-            size="small"
-            style={{ maxWidth: 600, margin: '0 auto' }}
-          >
-            {analysisSteps.map((step, index) => (
-              <Step 
-                key={index}
-                title={step.title} 
-                description={step.description}
+        {/* Input Section */}
+        <NeoBrutalistCard className="mb-8" background="white">
+          <div className="space-y-4">
+            <label className="block font-display font-bold text-lg text-black">
+              GitHub Repository URL 📂
+            </label>
+            <div className="flex flex-col md:flex-row gap-4">
+              <input
+                type="text"
+                value={repoUrl}
+                onChange={handleUrlChange}
+                placeholder="https://github.com/username/repository"
+                className="flex-1 px-4 py-3 border-4 border-black font-mono text-lg focus:outline-none focus:ring-0 transform hover:-rotate-1 transition-transform"
+                disabled={loading}
               />
-            ))}
-          </Steps>
-          <Paragraph type="secondary" style={{ marginTop: 16 }}>
-            Our AI is examining your code. This may take a few moments.
-          </Paragraph>
-        </Card>
-      )}
-
-      {/* Error State */}
-      {error && (
-        <div style={getContainerStyle({ marginBottom: 24, borderRadius: '8px' })}>
-          <Result
-            status="error"
-            title="Analysis Failed"
-            subTitle={error}
-            extra={[
-              <Button 
-                type="primary" 
-                key="retry"
-                onClick={() => setError('')}
+              <CTAButton
+                onClick={handleAnalyze}
+                disabled={loading || !repoUrl.trim()}
+                size="lg"
+                color="green"
+                className="whitespace-nowrap"
               >
-                Try Again
-              </Button>
-            ]}
-          />
-        </div>
-      )}
+                {loading ? 'Analyzing... 🔄' : 'Analyze Now! 🚀'}
+              </CTAButton>
+            </div>
+          </div>
+        </NeoBrutalistCard>
 
-      {/* Empty State */}
-      {!loading && !error && !results && (
-        <Card style={{ 
-          textAlign: 'center', 
-          marginBottom: 24,
-          ...getContainerStyle()
-        }}>
-          <Empty
-            image={Empty.PRESENTED_IMAGE_SIMPLE}
-            description={
-              <span>
-                Enter a GitHub repository URL above to get started with AI-powered analysis
-              </span>
-            }
-          />
-        </Card>
-      )}
+        {/* Error Display */}
+        {error && (
+          <NeoBrutalistCard className="mb-8" background="neo-pink">
+            <div className="flex items-center gap-3">
+              <span className="text-2xl">❌</span>
+              <div>
+                <h3 className="font-display font-bold text-lg text-black">Oops! Something went wrong</h3>
+                <p className="text-black/80">{error}</p>
+              </div>
+            </div>
+          </NeoBrutalistCard>
+        )}
 
-      {/* Results */}
-      {results && results.success && (
-        <div style={{ maxWidth: 1200, margin: '0 auto' }}>
-          {/* Repository Information */}
-          <Card 
-            title={
-              <Space>
-                <GithubOutlined />
-                Repository Information
-              </Space>
-            }
-            style={{ 
-              marginBottom: 24,
-              ...getContainerStyle()
-            }}
-            extra={
-              <Space>
-                {detectLanguages(results.repositoryInfo).map(lang => (
-                  <Tag key={lang} color="blue">{lang}</Tag>
-                ))}
-              </Space>
-            }
-          >
-            <Row gutter={[16, 16]}>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Repository" 
-                  value={`${results.repositoryInfo?.owner}/${results.repositoryInfo?.repo}` || 'N/A'}
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Analysis Date" 
-                  value={new Date().toLocaleDateString()}
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Files Analyzed" 
-                  value={results.repositoryInfo?.totalFiles || 0}
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Code Files" 
-                  value={results.repositoryInfo?.codeFiles || 0}
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-            </Row>
-          </Card>
-
-          {/* AI Analysis Results */}
-          {results.aiAnalysis && (
-            <Card 
-              title={
-                <Space>
-                  <TrophyOutlined style={{ color: '#faad14' }} />
-                  AI Analysis Results
-                </Space>
-              }
-              style={{ 
-                marginBottom: 24,
-                ...getContainerStyle()
-              }}
-            >
-              {/* Overall Readiness Score */}
-              <div style={{ textAlign: 'center', marginBottom: 32 }}>
-                <Title level={3} style={{ marginBottom: 16 }}>Overall Readiness Score</Title>
-                <Progress
-                  type="circle"
-                  percent={results.aiAnalysis.readinessScore || 0}
-                  size={120}
-                  strokeColor={getScoreColor(results.aiAnalysis.readinessScore || 0)}
-                  format={(percent) => `${percent}%`}
-                />
-                <div style={{ marginTop: 16 }}>
-                  <Badge 
-                    status={getScoreStatus(results.aiAnalysis.readinessScore || 0)}
-                    text={
-                      results.aiAnalysis.readinessScore >= 80 ? 'Excellent' :
-                      results.aiAnalysis.readinessScore >= 60 ? 'Good' : 'Needs Improvement'
-                    }
+        {/* Loading State */}
+        {loading && (
+          <div className="space-y-6">
+            {/* Progress Bar */}
+            <NeoBrutalistCard background="white">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <h3 className="font-display font-bold text-xl text-black">Analysis in Progress 🔄</h3>
+                  <span className="font-bold text-lg">{progress}%</span>
+                </div>
+                <div className="w-full bg-black/20 h-4 border-2 border-black">
+                  <div 
+                    className="bg-neo-green h-full transition-all duration-500 border-r-2 border-black"
+                    style={{ width: `${progress}%` }}
                   />
                 </div>
+                <p className="text-black/70 font-mono">{currentStep}</p>
               </div>
+            </NeoBrutalistCard>
 
-              {/* Tabbed Analysis Sections */}
-              <Tabs
-                defaultActiveKey="code"
-                items={[
-                  {
-                    key: 'code',
-                    label: (
-                      <Space>
-                        <CodeOutlined />
-                        Code Quality
-                      </Space>
-                    ),
-                    children: results.aiAnalysis.codeQuality ? (
-                      <div>
-                        <Row gutter={16} style={{ marginBottom: 16 }}>
-                          <Col span={12}>
-                            <Statistic
-                              title="Code Quality Score"
-                              value={results.aiAnalysis.codeQuality.score || 0}
-                              suffix="/ 100"
-                              valueStyle={{ color: getScoreColor(results.aiAnalysis.codeQuality.score || 0) }}
-                            />
-                          </Col>
-                          <Col span={12}>
-                            <Progress
-                              percent={results.aiAnalysis.codeQuality.score || 0}
-                              strokeColor={getScoreColor(results.aiAnalysis.codeQuality.score || 0)}
-                              status={getScoreStatus(results.aiAnalysis.codeQuality.score || 0)}
-                            />
-                          </Col>
-                        </Row>
-                        
-                        {results.aiAnalysis.codeQuality.strengths && results.aiAnalysis.codeQuality.strengths.length > 0 && (
-                          <div style={{ marginBottom: 16 }}>
-                            <Title level={5}>
-                              <CheckCircleOutlined style={{ color: '#52c41a', marginRight: 8 }} />
-                              Strengths
-                            </Title>
-                            <List
-                              size="small"
-                              dataSource={results.aiAnalysis.codeQuality.strengths}
-                              renderItem={(item) => (
-                                <List.Item>
-                                  <Tag color="green">{item}</Tag>
-                                </List.Item>
-                              )}
-                            />
-                          </div>
-                        )}
-                        
-                        {results.aiAnalysis.codeQuality.improvements && results.aiAnalysis.codeQuality.improvements.length > 0 && (
-                          <div>
-                            <Title level={5}>
-                              <ExclamationCircleOutlined style={{ color: '#faad14', marginRight: 8 }} />
-                              Suggested Improvements
-                            </Title>
-                            <List
-                              size="small"
-                              dataSource={results.aiAnalysis.codeQuality.improvements}
-                              renderItem={(item) => (
-                                <List.Item>
-                                  <Tag color="orange">{item}</Tag>
-                                </List.Item>
-                              )}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    ) : (
-                      <Empty description="No code quality data available" />
-                    )
-                  },
-                  {
-                    key: 'docs',
-                    label: (
-                      <Space>
-                        <BookOutlined />
-                        README Analysis
-                      </Space>
-                    ),
-                    children: (
-                      <ReadmeAnalyzer 
-                        analysis={results.aiAnalysis.features?.readmeAnalysis || results.aiAnalysis.readmeQuality}
-                        loading={false}
-                      />
-                    )
-                  },
-                  {
-                    key: 'dependencies',
-                    label: (
-                      <Space>
-                        <CodeOutlined />
-                        Dependencies
-                      </Space>
-                    ),
-                    children: (
-                      <DependencyAnalyzer 
-                        analysis={results.aiAnalysis.features?.dependencyAnalysis || results.aiAnalysis.dependencyHealth}
-                        loading={false}
-                      />
-                    )
-                  },
-                  {
-                    key: 'code-quality',
-                    label: (
-                      <Space>
-                        <BugOutlined />
-                        Code Quality
-                      </Space>
-                    ),
-                    children: (
-                      <CodeSmellScanner 
-                        analysis={results.aiAnalysis.features?.codeSmellAnalysis || results.aiAnalysis.codeQuality}
-                        loading={false}
-                      />
-                    )
-                  },
-                  {
-                    key: 'github-api',
-                    label: (
-                      <Space>
-                        <GitlabOutlined />
-                        GitHub Metrics
-                      </Space>
-                    ),
-                    children: (
-                      <GitHubApiAnalyzer 
-                        analysis={results.aiAnalysis.features?.githubApiAnalysis}
-                        loading={false}
-                      />
-                    )
-                  },
-                  {
-                    key: 'practices',
-                    label: (
-                      <Space>
-                        <ToolOutlined />
-                        Best Practices
-                      </Space>
-                    ),
-                    children: (
-                      <div>
-                        {results.aiAnalysis.overallSummary ? (
-                          <Alert
-                            message="Best Practices Analysis"
-                            description={results.aiAnalysis.overallSummary}
-                            type="info"
-                            showIcon
-                          />
-                        ) : (
-                          <Empty description="No best practices data available" />
-                        )}
-                      </div>
-                    )
-                  }
-                ]}
-              />
-            </Card>
-          )}
+            {/* Demo Terminal Output */}
+            <ResultBox 
+              title="Live Analysis Output 📟"
+              loading={true}
+              content={`> Initializing DevInsight analysis engine...
+> Repository URL: ${repoUrl}
+> ${currentStep}
+> Processing... Please wait while we analyze your repository 🔄`}
+            />
+          </div>
+        )}
 
-          {/* Analysis Details */}
-          <Card 
-            title="Analysis Details"
-            style={{ 
-              marginBottom: 24,
-              ...getContainerStyle()
-            }}
-          >
-            <Row gutter={[16, 16]}>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Processing Time" 
-                  value={results.processingTime || 'N/A'}
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Analysis ID" 
-                  value={results.databaseId || 'Not saved'}
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Database Status" 
-                  value={results.savedToDatabase ? 'Saved' : 'Not saved'}
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-              <Col xs={24} sm={12} md={6}>
-                <Statistic 
-                  title="Analysis Type" 
-                  value="AI-Powered Analysis"
-                  valueStyle={{ fontSize: '16px' }}
-                />
-              </Col>
-            </Row>
-          </Card>
-        </div>
-      )}
+        {/* Results */}
+        {analysisResult && (
+          <div className="space-y-8">
+            {/* Overall Score */}
+            <NeoBrutalistCard background="white" className="text-center">
+              <div className="space-y-4">
+                <h2 className="font-display font-black text-3xl text-black transform -rotate-1">
+                  Overall Score {getScoreEmoji(analysisResult.overallScore)}
+                </h2>
+                <div className="text-6xl font-black text-black">
+                  {analysisResult.overallScore}/100
+                </div>
+                <div className="flex justify-center">
+                  <BadgePill color={getScoreColor(analysisResult.overallScore)} size="lg">
+                    {analysisResult.overallScore >= 80 ? 'Excellent' : 
+                     analysisResult.overallScore >= 60 ? 'Good' :
+                     analysisResult.overallScore >= 40 ? 'Fair' : 'Needs Work'}
+                  </BadgePill>
+                </div>
+              </div>
+            </NeoBrutalistCard>
+
+            {/* Score Breakdown */}
+            {analysisResult.scoreBreakdown && (
+              <NeoBrutalistCard background="neo-yellow" className="mb-6">
+                <div className="space-y-4">
+                  <h3 className="font-display font-bold text-2xl text-black flex items-center gap-3">
+                    <span>📊</span>
+                    Detailed Score Breakdown
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="bg-white/50 p-3 border-2 border-black">
+                      <div className="font-bold text-black mb-2">Weight Distribution:</div>
+                      <div className="space-y-1 text-black">
+                        <div>📄 README: {analysisResult.scoreBreakdown.readmeWeight || 25}%</div>
+                        <div>📦 Dependencies: {analysisResult.scoreBreakdown.dependencyWeight || 25}%</div>
+                        <div>🐛 Code Quality: {analysisResult.scoreBreakdown.codeQualityWeight || 30}%</div>
+                        <div>⭐ GitHub Metrics: {analysisResult.scoreBreakdown.githubWeight || 20}%</div>
+                      </div>
+                    </div>
+                    <div className="bg-white/50 p-3 border-2 border-black">
+                      <div className="font-bold text-black mb-2">Weighted Contributions:</div>
+                      <div className="space-y-1 text-black">
+                        <div>📄 README: {((analysisResult.readmeScore || 0) * (analysisResult.scoreBreakdown.readmeWeight || 25) / 100).toFixed(1)} pts</div>
+                        <div>📦 Dependencies: {((analysisResult.dependencyScore || 0) * (analysisResult.scoreBreakdown.dependencyWeight || 25) / 100).toFixed(1)} pts</div>
+                        <div>🐛 Code Quality: {((analysisResult.codeQualityScore || 0) * (analysisResult.scoreBreakdown.codeQualityWeight || 30) / 100).toFixed(1)} pts</div>
+                        <div>⭐ GitHub Metrics: {((analysisResult.githubScore || 0) * (analysisResult.scoreBreakdown.githubWeight || 20) / 100).toFixed(1)} pts</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </NeoBrutalistCard>
+            )}
+
+            {/* Individual Scores */}
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { 
+                  name: 'README Quality', 
+                  score: analysisResult.readmeScore, 
+                  icon: '📄',
+                  details: analysisResult.readmeAnalysis?.sections || 'Comprehensive documentation analysis'
+                },
+                { 
+                  name: 'Dependencies', 
+                  score: analysisResult.dependencyScore, 
+                  icon: '📦',
+                  details: analysisResult.dependencyAnalysis?.total_dependencies ? 
+                    `${analysisResult.dependencyAnalysis.total_dependencies} total dependencies` : 
+                    'Dependency security and health check'
+                },
+                { 
+                  name: 'Code Quality', 
+                  score: analysisResult.codeQualityScore, 
+                  icon: '🐛',
+                  details: analysisResult.codeQualityAnalysis?.total_files ? 
+                    `${analysisResult.codeQualityAnalysis.total_files} files analyzed` : 
+                    'Code complexity and smell detection'
+                },
+                { 
+                  name: 'GitHub Metrics', 
+                  score: analysisResult.githubScore, 
+                  icon: '⭐',
+                  details: analysisResult.githubAnalysis?.stars !== undefined ? 
+                    `${analysisResult.githubAnalysis.stars} stars, ${analysisResult.githubAnalysis.forks} forks` : 
+                    'Repository activity and engagement'
+                }
+              ].map((metric, index) => (
+                <NeoBrutalistCard key={index} background="pastel-pink" className="text-center">
+                  <div className="space-y-2">
+                    <div className="text-2xl">{metric.icon}</div>
+                    <h3 className="font-display font-bold text-sm text-black">{metric.name}</h3>
+                    <div className="text-2xl font-black text-black">{metric.score}/100</div>
+                    <BadgePill color={getScoreColor(metric.score)} size="sm">
+                      {metric.score >= 80 ? 'Great' : 
+                       metric.score >= 60 ? 'Good' :
+                       metric.score >= 40 ? 'OK' : 'Poor'}
+                    </BadgePill>
+                    <div className="text-xs text-black/70 mt-2 leading-tight">
+                      {typeof metric.details === 'string' ? metric.details : 'Analysis complete'}
+                    </div>
+                  </div>
+                </NeoBrutalistCard>
+              ))}
+            </div>
+
+            {/* Detailed Analytics */}
+            <div className="space-y-6">
+              {/* README Analysis */}
+              {analysisResult.readmeAnalysis && (
+                <NeoBrutalistCard background="neo-green">
+                  <div className="space-y-4">
+                    <h3 className="font-display font-bold text-2xl text-black flex items-center gap-3">
+                      <span>📄</span>
+                      README Analysis ({analysisResult.readmeScore}/100)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Documentation Quality</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          {typeof analysisResult.readmeAnalysis === 'object' ? (
+                            <>
+                              <div>Length: {analysisResult.readmeAnalysis.length || 'Unknown'} characters</div>
+                              <div>Sections: {analysisResult.readmeAnalysis.sections || 'Basic structure'}</div>
+                              <div>Installation Guide: {analysisResult.readmeAnalysis.hasInstallation ? '✅' : '❌'}</div>
+                              <div>Usage Examples: {analysisResult.readmeAnalysis.hasUsage ? '✅' : '❌'}</div>
+                              <div>Contributing Guide: {analysisResult.readmeAnalysis.hasContributing ? '✅' : '❌'}</div>
+                            </>
+                          ) : (
+                            <div>{analysisResult.readmeAnalysis}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Recommendations</h4>
+                        <div className="space-y-1 text-sm text-black">
+                          {analysisResult.readmeScore < 60 && (
+                            <>
+                              <div>• Add comprehensive installation instructions</div>
+                              <div>• Include usage examples and code snippets</div>
+                              <div>• Add contributing guidelines</div>
+                              <div>• Include project description and features</div>
+                            </>
+                          )}
+                          {analysisResult.readmeScore >= 60 && analysisResult.readmeScore < 80 && (
+                            <>
+                              <div>• Enhance existing sections with more detail</div>
+                              <div>• Add badges for build status and coverage</div>
+                              <div>• Include API documentation</div>
+                            </>
+                          )}
+                          {analysisResult.readmeScore >= 80 && (
+                            <div>• Excellent documentation! Consider adding screenshots or diagrams</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </NeoBrutalistCard>
+              )}
+
+              {/* Dependencies Analysis */}
+              {analysisResult.dependencyAnalysis && (
+                <NeoBrutalistCard background="neo-purple">
+                  <div className="space-y-4">
+                    <h3 className="font-display font-bold text-2xl text-black flex items-center gap-3">
+                      <span>📦</span>
+                      Dependency Analysis ({analysisResult.dependencyScore}/100)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Package Overview</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          {typeof analysisResult.dependencyAnalysis === 'object' ? (
+                            <>
+                              <div>Total: {analysisResult.dependencyAnalysis.total_dependencies || 0}</div>
+                              <div>Production: {analysisResult.dependencyAnalysis.dependencies || 0}</div>
+                              <div>Development: {analysisResult.dependencyAnalysis.devDependencies || 0}</div>
+                              <div>Outdated: {analysisResult.dependencyAnalysis.outdated || 0}</div>
+                            </>
+                          ) : (
+                            <div>{analysisResult.dependencyAnalysis}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Security Status</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          <div>Vulnerabilities: {analysisResult.dependencyAnalysis.vulnerabilities || 0}</div>
+                          <div>Security Score: {analysisResult.dependencyAnalysis.securityScore || 'Unknown'}</div>
+                          <div>License Issues: {analysisResult.dependencyAnalysis.licenseIssues || 0}</div>
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Action Items</h4>
+                        <div className="space-y-1 text-sm text-black">
+                          {analysisResult.dependencyScore < 60 && (
+                            <>
+                              <div>• Update outdated packages</div>
+                              <div>• Review security vulnerabilities</div>
+                              <div>• Audit license compatibility</div>
+                            </>
+                          )}
+                          {analysisResult.dependencyScore >= 60 && (
+                            <div>• Dependencies are well maintained</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </NeoBrutalistCard>
+              )}
+
+              {/* Code Quality Analysis */}
+              {analysisResult.codeQualityAnalysis && (
+                <NeoBrutalistCard background="neo-blue">
+                  <div className="space-y-4">
+                    <h3 className="font-display font-bold text-2xl text-black flex items-center gap-3">
+                      <span>🐛</span>
+                      Code Quality Analysis ({analysisResult.codeQualityScore}/100)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Code Metrics</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          {typeof analysisResult.codeQualityAnalysis === 'object' ? (
+                            <>
+                              <div>Files Analyzed: {analysisResult.codeQualityAnalysis.total_files || 0}</div>
+                              <div>Lines of Code: {analysisResult.codeQualityAnalysis.total_lines || 0}</div>
+                              <div>Functions: {analysisResult.codeQualityAnalysis.total_functions || 0}</div>
+                              <div>Complexity Score: {analysisResult.codeQualityAnalysis.complexity_score || 'N/A'}</div>
+                            </>
+                          ) : (
+                            <div>{analysisResult.codeQualityAnalysis}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Code Smells</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          <div>Long Functions: {analysisResult.codeQualityAnalysis.long_functions || 0}</div>
+                          <div>Large Files: {analysisResult.codeQualityAnalysis.large_files || 0}</div>
+                          <div>Duplicate Code: {analysisResult.codeQualityAnalysis.duplicates || 0}</div>
+                          <div>Magic Numbers: {analysisResult.codeQualityAnalysis.magic_numbers || 0}</div>
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Improvement Areas</h4>
+                        <div className="space-y-1 text-sm text-black">
+                          {analysisResult.codeQualityScore < 60 && (
+                            <>
+                              <div>• Refactor large functions</div>
+                              <div>• Add code documentation</div>
+                              <div>• Reduce file complexity</div>
+                              <div>• Implement error handling</div>
+                            </>
+                          )}
+                          {analysisResult.codeQualityScore >= 60 && analysisResult.codeQualityScore < 80 && (
+                            <>
+                              <div>• Add unit tests</div>
+                              <div>• Improve code comments</div>
+                              <div>• Consider design patterns</div>
+                            </>
+                          )}
+                          {analysisResult.codeQualityScore >= 80 && (
+                            <div>• Code quality is excellent!</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </NeoBrutalistCard>
+              )}
+
+              {/* GitHub Metrics Analysis */}
+              {analysisResult.githubAnalysis && (
+                <NeoBrutalistCard background="neo-red">
+                  <div className="space-y-4">
+                    <h3 className="font-display font-bold text-2xl text-black flex items-center gap-3">
+                      <span>⭐</span>
+                      GitHub Metrics Analysis ({analysisResult.githubScore}/100)
+                    </h3>
+                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Repository Stats</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          {typeof analysisResult.githubAnalysis === 'object' ? (
+                            <>
+                              <div>⭐ Stars: {analysisResult.githubAnalysis.stars || 0}</div>
+                              <div>🍴 Forks: {analysisResult.githubAnalysis.forks || 0}</div>
+                              <div>👁️ Watchers: {analysisResult.githubAnalysis.watchers || 0}</div>
+                              <div>📊 Size: {analysisResult.githubAnalysis.size || 0} KB</div>
+                            </>
+                          ) : (
+                            <div>{analysisResult.githubAnalysis}</div>
+                          )}
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Activity Metrics</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          <div>Issues: {analysisResult.githubAnalysis.open_issues || 0}</div>
+                          <div>Last Push: {analysisResult.githubAnalysis.last_push || 'Unknown'}</div>
+                          <div>Contributors: {analysisResult.githubAnalysis.contributors || 1}</div>
+                          <div>Commits: {analysisResult.githubAnalysis.commits || 'N/A'}</div>
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Health Indicators</h4>
+                        <div className="space-y-2 text-sm text-black">
+                          <div>License: {analysisResult.githubAnalysis.license ? '✅' : '❌'}</div>
+                          <div>README: {analysisResult.githubAnalysis.has_readme ? '✅' : '❌'}</div>
+                          <div>Issues: {analysisResult.githubAnalysis.has_issues ? '✅' : '❌'}</div>
+                          <div>Wiki: {analysisResult.githubAnalysis.has_wiki ? '✅' : '❌'}</div>
+                        </div>
+                      </div>
+                      <div className="bg-white/50 p-4 border-2 border-black">
+                        <h4 className="font-bold text-black mb-2">Growth Tips</h4>
+                        <div className="space-y-1 text-sm text-black">
+                          {analysisResult.githubScore < 40 && (
+                            <>
+                              <div>• Add comprehensive README</div>
+                              <div>• Enable GitHub Pages</div>
+                              <div>• Add project license</div>
+                              <div>• Encourage contributions</div>
+                            </>
+                          )}
+                          {analysisResult.githubScore >= 40 && analysisResult.githubScore < 70 && (
+                            <>
+                              <div>• Promote on social media</div>
+                              <div>• Add project topics/tags</div>
+                              <div>• Create release notes</div>
+                            </>
+                          )}
+                          {analysisResult.githubScore >= 70 && (
+                            <div>• Great community engagement!</div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </NeoBrutalistCard>
+              )}
+            </div>
+
+            {/* AI Recommendations & Action Plan */}
+            <NeoBrutalistCard background="neo-yellow">
+              <div className="space-y-6">
+                <h3 className="font-display font-bold text-2xl text-black flex items-center gap-3">
+                  <span>💡</span>
+                  AI-Powered Recommendations & Action Plan
+                </h3>
+                
+                {/* Priority Actions */}
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div className="bg-red-100 p-4 border-2 border-black">
+                    <h4 className="font-bold text-red-800 mb-3 flex items-center gap-2">
+                      🚨 High Priority
+                    </h4>
+                    <div className="space-y-2 text-sm text-red-700">
+                      {analysisResult.overallScore < 40 && (
+                        <>
+                          <div>• Fix critical dependency vulnerabilities</div>
+                          <div>• Add comprehensive README documentation</div>
+                          <div>• Implement basic error handling</div>
+                          <div>• Add project license</div>
+                        </>
+                      )}
+                      {analysisResult.dependencyScore === 0 && (
+                        <div>• Add package.json with proper dependencies</div>
+                      )}
+                      {analysisResult.readmeScore < 30 && (
+                        <div>• Create detailed project documentation</div>
+                      )}
+                      {!analysisResult.overallScore || analysisResult.overallScore >= 40 ? (
+                        <div>• No critical issues found!</div>
+                      ) : null}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-yellow-100 p-4 border-2 border-black">
+                    <h4 className="font-bold text-yellow-800 mb-3 flex items-center gap-2">
+                      ⚠️ Medium Priority
+                    </h4>
+                    <div className="space-y-2 text-sm text-yellow-700">
+                      {analysisResult.overallScore >= 40 && analysisResult.overallScore < 70 && (
+                        <>
+                          <div>• Improve code documentation</div>
+                          <div>• Add unit tests</div>
+                          <div>• Update outdated dependencies</div>
+                          <div>• Enhance GitHub repository description</div>
+                        </>
+                      )}
+                      {analysisResult.codeQualityScore < 70 && (
+                        <div>• Refactor complex functions</div>
+                      )}
+                      {analysisResult.githubScore < 50 && (
+                        <div>• Improve repository visibility</div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="bg-green-100 p-4 border-2 border-black">
+                    <h4 className="font-bold text-green-800 mb-3 flex items-center gap-2">
+                      ✅ Nice to Have
+                    </h4>
+                    <div className="space-y-2 text-sm text-green-700">
+                      {analysisResult.overallScore >= 70 && (
+                        <>
+                          <div>• Add CI/CD pipeline</div>
+                          <div>• Create project website</div>
+                          <div>• Add code coverage reports</div>
+                          <div>• Implement advanced testing</div>
+                        </>
+                      )}
+                      <div>• Add project screenshots</div>
+                      <div>• Create contribution guidelines</div>
+                      <div>• Add changelog documentation</div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Custom Recommendations */}
+                {analysisResult.recommendations && analysisResult.recommendations.length > 0 && (
+                  <div className="space-y-4">
+                    <h4 className="font-bold text-black text-lg">Custom AI Recommendations:</h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                      {analysisResult.recommendations.map((rec, index) => (
+                        <div key={index} className="bg-white/70 p-4 border-2 border-black transform hover:rotate-1 transition-transform">
+                          <p className="font-body text-black text-sm">{rec}</p>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Improvement Roadmap */}
+                <div className="bg-white/50 p-4 border-2 border-black">
+                  <h4 className="font-bold text-black mb-3 text-lg">🗺️ 30-Day Improvement Roadmap</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+                    <div>
+                      <div className="font-bold text-black mb-2">Week 1-2: Foundation</div>
+                      <div className="space-y-1 text-black">
+                        <div>📋 Update README with clear instructions</div>
+                        <div>🔒 Fix security vulnerabilities</div>
+                        <div>📜 Add proper licensing</div>
+                        <div>🏷️ Add repository topics and description</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-black mb-2">Week 2-3: Enhancement</div>
+                      <div className="space-y-1 text-black">
+                        <div>🧪 Add unit tests and coverage</div>
+                        <div>📦 Update dependencies</div>
+                        <div>🎨 Improve code structure</div>
+                        <div>📚 Add API documentation</div>
+                      </div>
+                    </div>
+                    <div>
+                      <div className="font-bold text-black mb-2">Week 3-4: Optimization</div>
+                      <div className="space-y-1 text-black">
+                        <div>🚀 Set up CI/CD pipeline</div>
+                        <div>📊 Add performance monitoring</div>
+                        <div>🌐 Create project website</div>
+                        <div>📢 Promote to community</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Score Projection */}
+                <div className="bg-gradient-to-r from-blue-100 to-purple-100 p-4 border-2 border-black">
+                  <h4 className="font-bold text-black mb-3 text-lg">📈 Potential Score Improvement</h4>
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
+                    <div>
+                      <div className="text-2xl font-bold text-blue-600">{analysisResult.overallScore}</div>
+                      <div className="text-sm text-black">Current Score</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-green-600">
+                        {Math.min(100, analysisResult.overallScore + 15)}
+                      </div>
+                      <div className="text-sm text-black">With README</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-purple-600">
+                        {Math.min(100, analysisResult.overallScore + 25)}
+                      </div>
+                      <div className="text-sm text-black">+ Dependencies</div>
+                    </div>
+                    <div>
+                      <div className="text-2xl font-bold text-orange-600">
+                        {Math.min(100, analysisResult.overallScore + 40)}
+                      </div>
+                      <div className="text-sm text-black">Full Optimization</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </NeoBrutalistCard>
+
+            {/* Action Buttons */}
+            <div className="flex flex-col md:flex-row gap-4 justify-center">
+              <CTAButton 
+                onClick={() => {
+                  setAnalysisResult(null);
+                  setRepoUrl('');
+                  setProgress(0);
+                  setCurrentStep('');
+                }}
+                color="green"
+                size="lg"
+              >
+                Analyze Another Repo 🔄
+              </CTAButton>
+              <CTAButton 
+                onClick={() => window.print()}
+                color="blue"
+                size="lg"
+              >
+                Export Report 📄
+              </CTAButton>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };

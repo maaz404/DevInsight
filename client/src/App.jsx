@@ -1,225 +1,177 @@
-
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
-import { Layout, Menu, Switch, Space, Button, Drawer, Grid, ConfigProvider, Typography, Row, Col } from 'antd';
-import {
-  GithubOutlined,
-  BarChartOutlined,
-  SearchOutlined,
-  BulbOutlined,
-  BulbFilled,
-  MenuOutlined,
-} from '@ant-design/icons';
-import { ThemeProvider, useTheme } from './theme/ThemeProvider';
 import Home from './pages/Home';
 import AnalyzeRepo from './pages/AnalyzeRepo';
+import NotFound from './pages/NotFound';
 
-const { Header, Sider, Content } = Layout;
-const { Title } = Typography;
-
-function AppContent() {
+function Navigation() {
   const location = useLocation();
-  const { theme, isDarkMode, toggleTheme } = useTheme();
-  const [drawerVisible, setDrawerVisible] = useState(false);
-  const breakpoint = Grid.useBreakpoint();
-  
-  // Mobile detection - screens smaller than 'md' (768px)
-  const isMobile = !breakpoint.md;
-  
-  const getSelectedKey = () => {
-    if (location.pathname === '/analyze') return ['2'];
-    return ['1'];
-  };
-
-  const menuItems = [
-    {
-      key: '1',
-      icon: <BarChartOutlined />,
-      label: <Link to="/">Dashboard</Link>,
-    },
-    {
-      key: '2',
-      icon: <SearchOutlined />,
-      label: <Link to="/analyze">Analyze Repo</Link>,
-    },
-  ];
-
-  // Mobile-optimized sidebar content
-  const SidebarContent = ({ closeSidebar = null }) => (
-    <>
-      <div style={{ 
-        height: isMobile ? 56 : 64, 
-        margin: isMobile ? '12px' : '16px', 
-        color: isDarkMode ? '#FFFFFFD9' : '#3a6ea5', 
-        fontWeight: 'bold', 
-        fontSize: isMobile ? 16 : 18, 
-        textAlign: 'center',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        transition: 'all 0.3s ease'
-      }}>
-        <GithubOutlined style={{ marginRight: isMobile ? 6 : 8 }} />
-        DevInsight
-      </div>
-      <Menu 
-        theme={isDarkMode ? "dark" : "light"} 
-        mode="inline" 
-        selectedKeys={getSelectedKey()}
-        items={menuItems}
-        onClick={() => {
-          if (closeSidebar) closeSidebar();
-        }}
-        style={{
-          border: 'none',
-          transition: 'all 0.3s ease',
-          background: isDarkMode ? '#141414' : '#dde3ea'
-        }}
-      />
-    </>
-  );
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <ConfigProvider theme={theme}>
-      <Layout style={{ minHeight: '100vh', background: isDarkMode ? '#000000' : '#f4f6f8' }}>
-      {/* Desktop Sidebar */}
-      {!isMobile && (
-        <Sider
-          width={250}
-          style={{
-            background: isDarkMode ? '#141414' : '#dde3ea',
-            borderRight: `1px solid ${isDarkMode ? '#303030' : '#c7d2dd'}`,
-            position: 'fixed',
-            height: '100vh',
-            left: 0,
-            top: 0,
-            zIndex: 1000,
-            transition: 'all 0.3s ease'
-          }}
-        >
-          <SidebarContent />
-        </Sider>
-      )}
+    <nav className="bg-black text-white border-b-4 border-white">
+      <div className="container mx-auto px-4">
+        <div className="flex items-center justify-between h-16">
+          {/* Logo */}
+          <Link to="/" className="font-display font-black text-xl text-white hover:text-neo-green transition-colors">
+            DevInsight 👀
+          </Link>
 
-      {/* Mobile Drawer */}
-      <Drawer
-        title={
-          <Space style={{ color: isDarkMode ? '#FFFFFFD9' : '#1e1e1e' }}>
-            <GithubOutlined />
-            DevInsight
-          </Space>
-        }
-        placement="left"
-        onClose={() => setDrawerVisible(false)}
-        open={drawerVisible}
-        width={280}
-        bodyStyle={{ 
-          padding: 0,
-          background: isDarkMode ? '#141414' : '#dde3ea'
-        }}
-      >
-        <SidebarContent closeSidebar={() => setDrawerVisible(false)} />
-      </Drawer>
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-6">
+            <Link 
+              to="/" 
+              className={`font-display font-bold transition-colors ${
+                location.pathname === '/' ? 'text-neo-green' : 'text-white hover:text-neo-green'
+              }`}
+            >
+              Home
+            </Link>
+            <Link 
+              to="/analyze" 
+              className={`font-display font-bold transition-colors ${
+                location.pathname === '/analyze' ? 'text-neo-green' : 'text-white hover:text-neo-green'
+              }`}
+            >
+              Analyze
+            </Link>
+            <a 
+              href="https://github.com/maaz404/Devinsight" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className="text-white hover:text-neo-green transition-colors"
+            >
+              <div className="flex items-center gap-2 font-bold">
+                <span>GitHub</span>
+                <span className="text-lg">🔗</span>
+              </div>
+            </a>
+          </div>
 
-      <Layout style={{ 
-        marginLeft: isMobile ? 0 : 250, 
-        background: isDarkMode ? '#000000' : '#f4f6f8',
-        transition: 'margin-left 0.3s ease' 
-      }}>
-        {/* Responsive Header */}
-        <Header style={{
-          background: isDarkMode ? '#1f1f1f' : '#ffffff',
-          padding: isMobile ? '0 12px' : '0 24px',
-          borderBottom: `1px solid ${isDarkMode ? '#303030' : '#e0e6ec'}`,
-          position: 'sticky',
-          top: 0,
-          zIndex: 999,
-          height: isMobile ? 56 : 64,
-          transition: 'all 0.3s ease'
-        }}>
-          <Row align="middle" justify="space-between" style={{ width: '100%', height: '100%' }}>
-            <Col flex="auto">
-              <Row align="middle" gutter={12}>
-                {isMobile && (
-                  <Col>
-                    <Button
-                      type="text"
-                      icon={<MenuOutlined />}
-                      onClick={() => setDrawerVisible(true)}
-                      style={{
-                        fontSize: '16px',
-                        color: isDarkMode ? '#FFFFFFD9' : '#3a6ea5',
-                        border: 'none'
-                      }}
-                    />
-                  </Col>
-                )}
-                <Col>
-                  <Title 
-                    level={isMobile ? 5 : 4} 
-                    style={{ 
-                      margin: 0, 
-                      color: isDarkMode ? '#FFFFFFD9' : '#3a6ea5',
-                      fontSize: isMobile ? '14px' : '18px',
-                      fontWeight: 600
-                    }}
-                  >
-                    DevInsight - AI Repository Analyzer
-                  </Title>
-                </Col>
-              </Row>
-            </Col>
-            <Col>
-              <Space size="middle">
-                <Space align="center">
-                  {isDarkMode ? (
-                    <BulbFilled style={{ color: '#faad14', fontSize: isMobile ? '14px' : '16px' }} />
-                  ) : (
-                    <BulbOutlined style={{ color: '#8c8c8c', fontSize: isMobile ? '14px' : '16px' }} />
-                  )}
-                  <Switch
-                    checked={isDarkMode}
-                    onChange={toggleTheme}
-                    size={isMobile ? "small" : "default"}
-                    checkedChildren="🌙"
-                    unCheckedChildren="☀️"
-                    style={{ backgroundColor: isDarkMode ? '#1890ff' : '#d9d9d9' }}
-                  />
-                </Space>
-              </Space>
-            </Col>
-          </Row>
-        </Header>
+          {/* Mobile Menu Button */}
+          <button
+            className="md:hidden text-white text-xl"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            {mobileMenuOpen ? '✕' : '☰'}
+          </button>
+        </div>
 
-        {/* Responsive Content */}
-        <Content style={{
-          margin: isMobile ? '12px' : '24px',
-          padding: isMobile ? '16px' : '24px',
-          background: isDarkMode ? '#141414' : '#ffffff',
-          borderRadius: '8px',
-          minHeight: 280,
-          boxShadow: isDarkMode 
-            ? '0 1px 3px rgba(255, 255, 255, 0.1)' 
-            : '0 1px 3px rgba(0, 0, 0, 0.1)',
-          transition: 'all 0.3s ease'
-        }}>
-          <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/analyze" element={<AnalyzeRepo />} />
-          </Routes>
-        </Content>
-      </Layout>
-    </Layout>
-    </ConfigProvider>
+        {/* Mobile Navigation */}
+        {mobileMenuOpen && (
+          <div className="md:hidden py-4 border-t border-white/20">
+            <div className="flex flex-col space-y-3">
+              <Link 
+                to="/" 
+                onClick={() => setMobileMenuOpen(false)}
+                className={`font-display font-bold py-2 ${
+                  location.pathname === '/' ? 'text-neo-green' : 'text-white'
+                }`}
+              >
+                Home
+              </Link>
+              <Link 
+                to="/analyze" 
+                onClick={() => setMobileMenuOpen(false)}
+                className={`font-display font-bold py-2 ${
+                  location.pathname === '/analyze' ? 'text-neo-green' : 'text-white'
+                }`}
+              >
+                Analyze
+              </Link>
+              <a 
+                href="https://github.com/maaz404/Devinsight" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="text-white font-bold py-2 flex items-center gap-2"
+              >
+                <span>GitHub</span>
+                <span>🔗</span>
+              </a>
+            </div>
+          </div>
+        )}
+      </div>
+    </nav>
+  );
+}
+
+function Footer() {
+  return (
+    <footer className="bg-black text-white py-8 border-t-4 border-white">
+      <div className="container mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          {/* Brand */}
+          <div>
+            <h3 className="font-display font-black text-xl mb-4 text-neo-green">
+              DevInsight 👀
+            </h3>
+            <p className="text-white/80">
+              AI-powered GitHub repository analysis tool that provides actionable insights for developers.
+            </p>
+          </div>
+
+          {/* Links */}
+          <div>
+            <h4 className="font-display font-bold text-lg mb-4">Quick Links</h4>
+            <div className="space-y-2">
+              <Link to="/" className="block text-white/80 hover:text-neo-green transition-colors">
+                Home
+              </Link>
+              <Link to="/analyze" className="block text-white/80 hover:text-neo-green transition-colors">
+                Analyze Repository
+              </Link>
+              <a 
+                href="https://github.com/maaz404/Devinsight" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="block text-white/80 hover:text-neo-green transition-colors"
+              >
+                Source Code
+              </a>
+            </div>
+          </div>
+
+          {/* Features */}
+          <div>
+            <h4 className="font-display font-bold text-lg mb-4">Features</h4>
+            <div className="space-y-1 text-white/80 text-sm">
+              <div>📄 README Analysis</div>
+              <div>📦 Dependency Health Check</div>
+              <div>🐛 Code Quality Scanning</div>
+              <div>⭐ GitHub Metrics Analysis</div>
+            </div>
+          </div>
+        </div>
+
+        <div className="border-t border-white/20 mt-8 pt-6 text-center text-white/60">
+          <p>© 2024 DevInsight. Built with ❤️ and lots of ☕</p>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function AppContent() {
+  return (
+    <div className="min-h-screen flex flex-col">
+      <Navigation />
+      <main className="flex-1">
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/analyze" element={<AnalyzeRepo />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
 function App() {
   return (
     <Router>
-      <ThemeProvider>
-        <AppContent />
-      </ThemeProvider>
+      <AppContent />
     </Router>
   );
 }
