@@ -85,6 +85,17 @@ Access at: `http://localhost:5173`
 
 Returns comprehensive analysis with scores for README quality, dependency health, code quality, and GitHub metrics.
 
+## ⚠️ Getting Zero Scores?
+
+If your **GitHub Metrics** or **Code Quality** scores show 0:
+
+1. **Add GitHub Token**: Copy `server/.env.example` to `server/.env`
+2. **Get Token**: [GitHub Settings](https://github.com/settings/tokens) → Generate new token → Copy
+3. **Update .env**: Replace `your_actual_token_here` with your token
+4. **Restart**: `npm start` in server directory
+
+See [GITHUB_TOKEN_SETUP.md](GITHUB_TOKEN_SETUP.md) for detailed instructions.
+
 ## 🤝 Contributing
 
 1. Fork the repository

@@ -91,30 +91,49 @@ class GitHubService {
     console.log(`📊 GitHub Service: Analyzing ${owner}/${repo}`);
 
     try {
-      // If no valid auth, provide minimal analysis
+      // Try to fetch basic repository info even without auth
+      let repoData, contributorsData, commitsData, releasesData, issuesData, languagesData;
+
       if (!this.hasValidAuth) {
         console.log(
-          "⚠️ GitHub Service: Limited analysis due to no authentication"
+          "⚠️ GitHub Service: Attempting unauthenticated analysis with rate limits"
         );
-        return this._createFallbackAnalysis(owner, repo);
-      }
+        
+        // Try basic repository info without auth
+        try {
+          repoData = await Promise.resolve({
+            status: 'fulfilled',
+            value: await this._fetchRepositoryInfo(owner, repo)
+          });
+        } catch (error) {
+          console.warn(`Could not fetch repo info: ${error.message}`);
+          repoData = { status: 'rejected', reason: error };
+        }
 
-      // Fetch all data in parallel for better performance
-      const [
-        repoData,
-        contributorsData,
-        commitsData,
-        releasesData,
-        issuesData,
-        languagesData,
-      ] = await Promise.allSettled([
-        this._fetchRepositoryInfo(owner, repo),
-        this._fetchContributors(owner, repo),
-        this._fetchRecentCommits(owner, repo),
-        this._fetchReleases(owner, repo),
-        this._fetchIssuesInfo(owner, repo),
-        this._fetchLanguages(owner, repo),
-      ]);
+        // Set other data as rejected to use fallbacks
+        contributorsData = { status: 'rejected', reason: new Error('No auth') };
+        commitsData = { status: 'rejected', reason: new Error('No auth') };
+        releasesData = { status: 'rejected', reason: new Error('No auth') };
+        issuesData = { status: 'rejected', reason: new Error('No auth') };
+        languagesData = { status: 'rejected', reason: new Error('No auth') };
+      } else {
+        // Fetch all data in parallel for better performance
+        [
+          repoData,
+          contributorsData,
+          commitsData,
+          releasesData,
+          issuesData,
+          languagesData,
+        ] = await Promise.allSettled([
+          this._fetchRepositoryInfo(owner, repo),
+          this._fetchContributors(owner, repo),
+          this._fetchRecentCommits(owner, repo),
+          this._fetchReleases(owner, repo),
+          this._fetchIssuesInfo(owner, repo),
+          this._fetchLanguages(owner, repo),
+        ]);
+      }
 
       // Process the results
       const analysis = this._processRepositoryData({
