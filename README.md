@@ -17,6 +17,18 @@ A full-stack MERN application that analyzes GitHub repositories across multiple 
 - **📱 Mobile Responsive** - Optimized for all devices with dark/light themes
 - **⚡ Real-time Analysis** - Live progress tracking with detailed results
 
+## 🎨 User Interface
+
+DevInsight features a **Neo-Brutalist design** that makes repository analysis both functional and visually engaging:
+
+- **🎪 Bold Visual Design** - Sharp contrasts, vibrant colors, and playful tilted elements
+- **💫 Smooth Animations** - Hover effects, CSS transitions, and micro-interactions
+- **🎯 Interactive Components** - Custom score meters, animated progress bars, and responsive cards
+- **📱 Mobile-First** - Touch-friendly interface optimized for all screen sizes
+- **🎭 Playful Elements** - Emoji-rich content, tilted cards, and engaging visual feedback
+
+The interface combines professional functionality with a modern, approachable aesthetic that makes complex repository data easy to understand and navigate.
+
 ## 🚀 Quick Start
 
 ### Prerequisites
