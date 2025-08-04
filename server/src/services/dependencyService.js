@@ -62,7 +62,12 @@ class DependencyService {
   _configureAuthentication() {
     const token = process.env.GITHUB_TOKEN;
 
-    if (token && token !== "your_github_token_here" && token !== "your_actual_token_here" && token.length > 10) {
+    if (
+      token &&
+      token !== "your_github_token_here" &&
+      token !== "your_actual_token_here" &&
+      token.length > 10
+    ) {
       if (
         token.startsWith("ghp_") ||
         token.startsWith("gho_") ||

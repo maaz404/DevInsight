@@ -182,7 +182,7 @@ class CodeQualityService {
       return treeResponse.data.tree || [];
     } catch (error) {
       console.warn(`⚠️ Could not fetch file tree via API: ${error.message}`);
-      
+
       // Fallback: Create a mock file structure for analysis
       console.log("🔄 Using fallback file structure for basic analysis");
       return this._createMockFileStructure(owner, repo);
@@ -196,11 +196,11 @@ class CodeQualityService {
   _createMockFileStructure(owner, repo) {
     // Common file patterns for different project types
     return [
-      { path: 'src/index.js', type: 'blob', size: 1000, sha: 'mock' },
-      { path: 'src/components/App.jsx', type: 'blob', size: 2000, sha: 'mock' },
-      { path: 'src/utils/helpers.js', type: 'blob', size: 500, sha: 'mock' },
-      { path: 'package.json', type: 'blob', size: 800, sha: 'mock' },
-      { path: 'README.md', type: 'blob', size: 1200, sha: 'mock' },
+      { path: "src/index.js", type: "blob", size: 1000, sha: "mock" },
+      { path: "src/components/App.jsx", type: "blob", size: 2000, sha: "mock" },
+      { path: "src/utils/helpers.js", type: "blob", size: 500, sha: "mock" },
+      { path: "package.json", type: "blob", size: 800, sha: "mock" },
+      { path: "README.md", type: "blob", size: 1200, sha: "mock" },
     ];
   }
 

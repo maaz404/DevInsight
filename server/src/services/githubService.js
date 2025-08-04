@@ -92,30 +92,35 @@ class GitHubService {
 
     try {
       // Try to fetch basic repository info even without auth
-      let repoData, contributorsData, commitsData, releasesData, issuesData, languagesData;
+      let repoData,
+        contributorsData,
+        commitsData,
+        releasesData,
+        issuesData,
+        languagesData;
 
       if (!this.hasValidAuth) {
         console.log(
           "⚠️ GitHub Service: Attempting unauthenticated analysis with rate limits"
         );
-        
+
         // Try basic repository info without auth
         try {
           repoData = await Promise.resolve({
-            status: 'fulfilled',
-            value: await this._fetchRepositoryInfo(owner, repo)
+            status: "fulfilled",
+            value: await this._fetchRepositoryInfo(owner, repo),
           });
         } catch (error) {
           console.warn(`Could not fetch repo info: ${error.message}`);
-          repoData = { status: 'rejected', reason: error };
+          repoData = { status: "rejected", reason: error };
         }
 
         // Set other data as rejected to use fallbacks
-        contributorsData = { status: 'rejected', reason: new Error('No auth') };
-        commitsData = { status: 'rejected', reason: new Error('No auth') };
-        releasesData = { status: 'rejected', reason: new Error('No auth') };
-        issuesData = { status: 'rejected', reason: new Error('No auth') };
-        languagesData = { status: 'rejected', reason: new Error('No auth') };
+        contributorsData = { status: "rejected", reason: new Error("No auth") };
+        commitsData = { status: "rejected", reason: new Error("No auth") };
+        releasesData = { status: "rejected", reason: new Error("No auth") };
+        issuesData = { status: "rejected", reason: new Error("No auth") };
+        languagesData = { status: "rejected", reason: new Error("No auth") };
       } else {
         // Fetch all data in parallel for better performance
         [
