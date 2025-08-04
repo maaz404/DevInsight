@@ -1,4 +1,4 @@
-# DevInsight 🔍
+# DevInsight 
 
 **AI-Powered GitHub Repository Analysis Tool**
 
@@ -8,7 +8,7 @@
 
 A full-stack MERN application that analyzes GitHub repositories across multiple dimensions: documentation quality, dependency health, code quality, and repository metrics.
 
-## ✨ Features
+##  Features
 
 - **📄 README Analysis** - Documentation completeness and structure evaluation
 - **📦 Dependency Health** - Package security and maintenance status checking
@@ -17,7 +17,7 @@ A full-stack MERN application that analyzes GitHub repositories across multiple 
 - **📱 Mobile Responsive** - Optimized for all devices with dark/light themes
 - **⚡ Real-time Analysis** - Live progress tracking with detailed results
 
-## 🎨 User Interface
+##  User Interface
 
 DevInsight features a **Neo-Brutalist design** that makes repository analysis both functional and visually engaging:
 
@@ -29,7 +29,7 @@ DevInsight features a **Neo-Brutalist design** that makes repository analysis bo
 
 The interface combines professional functionality with a modern, approachable aesthetic that makes complex repository data easy to understand and navigate.
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### Prerequisites
 
@@ -67,13 +67,13 @@ cd client && npm run dev
 
 Access at: `http://localhost:5173`
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 **Frontend:** React 18, Vite, Ant Design, Tailwind CSS  
 **Backend:** Node.js, Express.js, MongoDB Atlas  
 **APIs:** GitHub REST API, npm Registry
 
-## 📋 API Usage
+##  API Usage
 
 **POST** `/api/analyze`
 
@@ -85,7 +85,7 @@ Access at: `http://localhost:5173`
 
 Returns comprehensive analysis with scores for README quality, dependency health, code quality, and GitHub metrics.
 
-## ⚠️ Getting Zero Scores?
+##  Getting Zero Scores?
 
 If your **GitHub Metrics** or **Code Quality** scores show 0:
 
@@ -96,7 +96,7 @@ If your **GitHub Metrics** or **Code Quality** scores show 0:
 
 See [GITHUB_TOKEN_SETUP.md](GITHUB_TOKEN_SETUP.md) for detailed instructions.
 
-## 🤝 Contributing
+##  Contributing
 
 1. Fork the repository
 2. Create your feature branch (`git checkout -b feature/amazing-feature`)
@@ -104,7 +104,7 @@ See [GITHUB_TOKEN_SETUP.md](GITHUB_TOKEN_SETUP.md) for detailed instructions.
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📄 License
+##  License
 
 MIT License - see [LICENSE](LICENSE) file for details.
 
